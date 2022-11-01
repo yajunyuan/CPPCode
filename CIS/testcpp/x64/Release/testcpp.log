@@ -1,0 +1,9 @@
+﻿C:\Program Files (x86)\Microsoft Visual Studio\2019\Professional\MSBuild\Microsoft\VC\v160\Microsoft.CppBuild.targets(513,5): warning MSB8028: 中间目录(x64\Release\)包含从另一个项目(testcpp.vcxproj)共享的文件。   这会导致错误的清除和重新生成行为。
+  gpucal.cpp
+    正在创建库 D:\C#\testcpp\x64\Release\CIS.lib 和对象 D:\C#\testcpp\x64\Release\CIS.exp
+  正在生成代码
+  1 of 2231 functions (<0.1%) were compiled, the rest were copied from previous compilation.
+    0 functions were new in current compilation
+    25 functions had inline decision re-evaluated but remain unchanged
+  已完成代码的生成
+  testcpp.vcxproj -> D:\C#\testcpp\x64\Release\CIS.exe
