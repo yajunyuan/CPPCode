@@ -1,0 +1,3 @@
+﻿  源.cpp
+D:\C#\testcpp\testcpp\源.cpp(85,5): error C4996: 'cudaThreadSynchronize': 被声明为已否决
+D:\C#\testcpp\testcpp\源.cpp(106,5): error C4996: 'cudaThreadSynchronize': 被声明为已否决
