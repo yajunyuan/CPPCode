@@ -1,1 +1,43 @@
-﻿  Defect_detection.vcxproj -> D:\c++\Defect_detection\x64\Release\Defect_detection.exe
+﻿  main.cpp
+D:\c++\Defect_detection\Defect_detection\main.cpp(363,44): warning C4244: “=”: 从“double”转换到“int”，可能丢失数据
+D:\c++\Defect_detection\Defect_detection\main.cpp(365,44): warning C4244: “=”: 从“double”转换到“int”，可能丢失数据
+D:\c++\Defect_detection\Defect_detection\main.cpp(367,44): warning C4244: “=”: 从“double”转换到“int”，可能丢失数据
+D:\c++\Defect_detection\Defect_detection\main.cpp(369,44): warning C4244: “=”: 从“double”转换到“int”，可能丢失数据
+D:\c++\Defect_detection\Defect_detection\main.cpp(371,44): warning C4244: “=”: 从“double”转换到“int”，可能丢失数据
+D:\c++\Defect_detection\Defect_detection\main.cpp(563,105): warning C4267: “初始化”: 从“size_t”转换到“int”，可能丢失数据
+D:\c++\Defect_detection\Defect_detection\main.cpp(641,36): warning C4244: “=”: 从“const double”转换到“int”，可能丢失数据
+D:\c++\Defect_detection\Defect_detection\main.cpp(647,36): warning C4244: “=”: 从“const double”转换到“int”，可能丢失数据
+D:\c++\Defect_detection\Defect_detection\main.cpp(969,35): warning C4267: “=”: 从“size_t”转换到“int”，可能丢失数据
+D:\c++\Defect_detection\Defect_detection\main.cpp(985,1): warning C4326: “main”的返回类型应为“int”而非“void”
+D:\c++\Defect_detection\Defect_detection\main.cpp(998,14): warning C4101: “outputinfo”: 未引用的局部变量
+D:\c++\Defect_detection\Defect_detection\main.cpp(999,15): warning C4101: “outputpixeldata”: 未引用的局部变量
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Professional\VC\Tools\MSVC\14.29.30133\include\type_traits(1534,98): warning C4244: “参数”: 从“unsigned __int64”转换到“int”，可能丢失数据
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Professional\VC\Tools\MSVC\14.29.30133\include\thread(51): message : 查看对正在编译的函数 模板 实例化“void std::invoke<void(__cdecl *)(cv::Mat,cv::Mat &,int,int,int,int),cv::Mat,std::reference_wrapper<cv::Mat>,int,int,unsigned __int64,int>(_Callable &&,_Ty1 &&,std::reference_wrapper<cv::Mat> &&,int &&,int &&,unsigned __int64 &&,int &&) noexcept(false)”的引用
+          with
+          [
+              _Callable=void (__cdecl *)(cv::Mat,cv::Mat &,int,int,int,int),
+              _Ty1=cv::Mat
+          ]
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Professional\VC\Tools\MSVC\14.29.30133\include\thread(61): message : 查看对正在编译的函数 模板 实例化“unsigned int std::thread::_Invoke<_Tuple,0,1,2,3,4,5,6>(void *) noexcept”的引用
+          with
+          [
+              _Tuple=_Tuple
+          ]
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Professional\VC\Tools\MSVC\14.29.30133\include\thread(66): message : 查看对正在编译的函数 模板 实例化“unsigned int (__cdecl *std::thread::_Get_invoke<_Tuple,0,1,2,3,4,5,6>(std::integer_sequence<size_t,0,1,2,3,4,5,6>) noexcept)(void *)”的引用
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Professional\VC\Tools\MSVC\14.29.30133\include\thread(89): message : 查看对正在编译的函数 模板 实例化“void std::thread::_Start<void(__cdecl &)(cv::Mat,cv::Mat &,int,int,int,int),cv::Mat&,_Ty,int&,int&,unsigned __int64,int&>(_Fn,cv::Mat &,_Ty &&,int &,int &,unsigned __int64 &&,int &)”的引用
+          with
+          [
+              _Ty=std::reference_wrapper<cv::Mat>,
+              _Fn=void (__cdecl &)(cv::Mat,cv::Mat &,int,int,int,int)
+          ]
+D:\c++\Defect_detection\Defect_detection\main.cpp(564): message : 查看对正在编译的函数 模板 实例化“std::thread::thread<void(__cdecl &)(cv::Mat,cv::Mat &,int,int,int,int),cv::Mat&,std::reference_wrapper<cv::Mat>,int&,int&,size_t,int&,0>(_Fn,cv::Mat &,std::reference_wrapper<cv::Mat> &&,int &,int &,size_t &&,int &)”的引用
+          with
+          [
+              _Fn=void (__cdecl &)(cv::Mat,cv::Mat &,int,int,int,int)
+          ]
+    正在创建库 D:\c++\Defect_detection\x64\Release\Defect_detection.lib 和对象 D:\c++\Defect_detection\x64\Release\Defect_detection.exp
+  正在生成代码
+  Previous IPDB not found, fall back to full compilation.
+  All 1227 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+  已完成代码的生成
+  Defect_detection.vcxproj -> D:\c++\Defect_detection\x64\Release\Defect_detection.dll
