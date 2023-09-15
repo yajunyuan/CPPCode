@@ -39,6 +39,8 @@ struct AvgPixelData {
 	uchar* avgpixel;  //每行平均像素的数组
 	int darkavgpixelsize; //暗场平均像素的长度
 	uchar* darkavgpixel;  //暗场每行平均像素的数组
+	int initPos; //隔膜在图像的起始位置
+	int endPos; //隔膜在图像的结束位置
 };
 void ReadImgarray(std::string imgfile, Mat& img)
 {
@@ -389,8 +391,9 @@ bool adjacencyJudge(uchar data, int minthreshold, int maxthreshold)
 	return (abs(data - minthreshold) < 10) || (abs(data - maxthreshold) < 10);
 }
 
-void highHandle(Mat src, Mat& dst, int minthreshold, int maxthreshold, int initHigh, int highvalue) {
+void highHandle(Mat src, Mat darksrc, Mat& dst, int minthreshold, int maxthreshold, int initHigh, int highvalue) {
 	for (auto i = initHigh; i < initHigh+ highvalue; i++) {
+		uchar* darkdata = darksrc.data + darksrc.step * i;
 		uchar* sdata = src.data + src.step * i; //明场数据
 		uchar* ddata = dst.data + dst.step * i; //分割数据
 		if (i == initHigh) {
@@ -458,6 +461,10 @@ void highHandle(Mat src, Mat& dst, int minthreshold, int maxthreshold, int initH
 							continue;
 						}
 					}
+				}
+				if (darkdata[j] > 60) {
+					ddata[j] = 255;
+					continue;
 				}
 				//else if (sdata[j] <=minthreshold + 10 || sdata[j] >= maxthreshold -10) {
 				//	if (j > 1 && abs(sdata[j + 1] - sdata[j - 2]) >= 12) {
@@ -543,7 +550,7 @@ void highHandle(Mat src, Mat& dst, int minthreshold, int maxthreshold, int initH
 	}
 }
 
-void threshold(Mat src, Mat& dst, int minthreshold, int maxthreshold) {
+void threshold(Mat src,Mat darksrc, Mat& dst, int minthreshold, int maxthreshold) {
 	Mat mean;
 	//dst.create(src.size().height / 2, src.size().width, src.type());
 	dst.create(src.size().height, src.size().width, src.type());
@@ -554,14 +561,14 @@ void threshold(Mat src, Mat& dst, int minthreshold, int maxthreshold) {
 
 	//多线程遍历处理图像高度
 	std::vector<std::thread> mythreads;
-	int threadcount = 15;
+	int threadcount = 5;
 	int singleheight = src.size().height/ threadcount;
 	int imgheight = src.size().height;
 	bool divideflag = imgheight % singleheight;
 	int threads = divideflag ? (imgheight / singleheight) + 1 : (imgheight / singleheight);
 	for (size_t i = 0; i < threads; i++) {
 		int singleheighttmp = (i == threads - 1) && divideflag ? (imgheight - i * singleheight) : singleheight;
-		mythreads.push_back(std::thread(highHandle, src, ref(dst), minthreshold, maxthreshold, i* singleheight, singleheighttmp));
+		mythreads.push_back(std::thread(highHandle, src, darksrc, ref(dst), minthreshold, maxthreshold, i* singleheight, singleheighttmp));
 	}
 	for (auto it = mythreads.begin(); it != mythreads.end(); ++it) {
 		it->join();
@@ -676,7 +683,7 @@ void findcounter(int offsetx, Mat brightImg, Mat darkImg, vector<DefectData>& ou
 
 	//threshold(img, canny_img, 115, 135, 3);
 	start = std::chrono::system_clock::now();
-	threshold(brightImg, canny_img, Threshold[0], Threshold[1]);
+	threshold(brightImg, darkImg, canny_img, Threshold[0], Threshold[1]);
 	//Mat dst;
 	//Mat kernel = getStructuringElement(0, Size(2, 2));
 	//morphologyEx(canny_img, dst, MORPH_OPEN, kernel);//开操作
@@ -728,15 +735,15 @@ void findcounter(int offsetx, Mat brightImg, Mat darkImg, vector<DefectData>& ou
 		datatmp.ratio = max(width, height )/ min(width, height);
 		Rect rect(left, top, width, height); //明场roi
 		Mat imgtmp = brightImg(rect);
-		Mat labeltmp = labels(rect);
+		Mat_<ushort> labeltmp = labels(rect);
 		//Rect rectimg(datatmp.box[0], datatmp.box[1], datatmp.box[2], datatmp.box[3]); //整图roi
 		
 		Mat darimgtmp = darkImg(rect);
-		labeltmp.convertTo(labeltmp, CV_8UC1);
+		labeltmp.convertTo(labeltmp, CV_16UC1);
 		//imgtmp.convertTo(imgtmp, CV_8UC1);
 
 		for (auto k = 0; k < labeltmp.size().height; k++) {
-			uchar* labelsdata = labeltmp.data + labeltmp.step * k;
+			ushort* labelsdata = (ushort*)(labeltmp.data + labeltmp.step * k);
 			//uchar* imgdata = imgtmp.data + imgtmp.step * k*2; // 明场数据
 			uchar* imgdata = imgtmp.data + imgtmp.step * k; // 明场数据
 			uchar* darkdata = darimgtmp.data + darimgtmp.step * k; // 暗场数据
@@ -753,15 +760,22 @@ void findcounter(int offsetx, Mat brightImg, Mat darkImg, vector<DefectData>& ou
 						edgeindex = j;
 						firstindex = false;
 					}
-					if (imgdata[j] < Threshold[0]) {
-						if (darkdata[j] >= 50) {
-							datatmp.pinholeflag = 1;
-						}
-						else if(darkdata[j] >= 20){
-							if (abs(j - edgeindex) < 3) {
-								datatmp.pinholeflag = 1;
+					if (imgdata[j] < 128) {
+						if (imgdata[j] < Threshold[0] - 10) {
+							//if (darkdata[j] >= 80) {
+							//	datatmp.pinholeflag = 1;
+							//}
+							if (darkdata[j] >= 80) {
+								if (abs(j - edgeindex) < 3) {
+									datatmp.pinholeflag = 1;
+								}
+								else {
+									datatmp.pinholeflag = 2;
+								}
 							}
-							else {
+						}
+						else {
+							if (darkdata[j] >= 37) {
 								datatmp.pinholeflag = 2;
 							}
 						}
@@ -794,6 +808,21 @@ void findcounter(int offsetx, Mat brightImg, Mat darkImg, vector<DefectData>& ou
 				//	}
 				//}
 			}
+			if (k == labeltmp.size().height - 1) {
+				uchar* briimgdata = brightImg.data + brightImg.step * (k+ top);
+				if (left < 100 || left > labels.size().width - 100) {
+					if (abs(totaldata[i] / datatmp.area - briimgdata[left+edgeindex - 5])<=10 ||
+						abs(totaldata[i] / datatmp.area - briimgdata[left + edgeindex - 4]) <=10) {
+						datatmp.pinholeflag = -2;
+					}
+				}
+			}
+		}
+		//if (datatmp.area < 10 && datatmp.pinholeflag != 1&& abs(datatmp.avggray-120)<10) {
+		//	continue;
+		//}
+		if (datatmp.pinholeflag == -2) {
+			continue;
 		}
 		if (datatmp.ratio<3	&& width * height/datatmp.area>5) {
 			datatmp.ratio = 5;
@@ -802,9 +831,6 @@ void findcounter(int offsetx, Mat brightImg, Mat darkImg, vector<DefectData>& ou
 		datatmp.box[0] += offsetx;
 		datatmp.avggray = totaldata[i] / datatmp.area;
 		datatmp.darkavggray = darktotaldata[i] / datatmp.area;
-		if (datatmp.area < 10 && abs(datatmp.avggray-120)<10) {
-			continue;
-		}
 		//	cout << i << "个： len: " << max(width,height) << "  wid:" << min(width, height) << " rate: " << 
 		//max(width, height) / min(width, height) << "  area: " << area << "  avg pixel: "<< totaldata[i]/ area << endl;
 
@@ -884,9 +910,19 @@ void CalAvgPixel(Mat brightImg, Mat darkImg, AvgPixelData& avgPixelData)
 			darksumpixel[j - 10] += kdata[j];
 		}
 	}
+	//int mindata = 255;
+	//int maxdata = 110;
 	for (auto j = 0; j < sumpixel.size(); j++) {
 		adata[j] = int(1.0 * sumpixel[j] / brightImg.size().height*10);
+		//if (adata[j] > maxdata) {
+		//	maxdata = adata[j];
+		//}
+		//if (adata[j] < mindata && adata[j]>110) {
+		//	mindata = adata[j];
+		//}
 	}
+	//Threshold[0] = mindata - 10;
+	//Threshold[1] = maxdata + 10;
 	for (auto j = 0; j < darksumpixel.size(); j++) {
 		ddata[j] = int(1.0*darksumpixel[j] / darkImg.size().height * 10);
 	}
@@ -947,9 +983,18 @@ void handle(uchar* data, uchar* data1, int width, int height, int stride, Defect
 
 	//多切线处理
 	std::vector<Rect> rectVector = findRect(img1, 0);
+	//std::vector<Rect> rectVector;
+	//rectVector.push_back(Rect(13360, 0, 17000, 2000));
 	std::vector<std::thread> mythreads;
 	mythreads.push_back(std::thread(CalAvgPixel, img1, darimg1, ref(avgPixelData)));
-
+	if (rectVector.size() == 0) {
+		avgPixelData.initPos = rectVector[0].x - 10;
+		avgPixelData.endPos = rectVector[0].x+ rectVector[0].width+20;
+	}
+	else {
+		avgPixelData.initPos = rectVector[0].x - 10;
+		avgPixelData.endPos = rectVector[rectVector.size()-1].x + rectVector[rectVector.size() - 1].width + 20;
+	}
 	vector<vector<DefectData>> outputInfotmp(rectVector.size());
 	for (size_t i = 0; i < rectVector.size(); i++) {
 		Mat singleimg = img1(rectVector[i]);
@@ -983,12 +1028,12 @@ void release(DefectData*& outputinfo)
 
 void main()
 {
-	string path = R"(D:\c++\image\0814明.bmp)";//R"(D:\c++\Defect_detection\test.bmp)";
+	string path = R"(D:\c++\image\0914\明.bmp)";//R"(D:\c++\Defect_detection\test.bmp)";
 	char* imgpath = (char*)path.c_str();
-	string path1 = R"(D:\c++\image\0814暗.bmp)";//R"(D:\c++\Defect_detection\test.bmp)";
+	string path1 = R"(D:\c++\image\0914\暗.bmp)";//R"(D:\c++\Defect_detection\test.bmp)";
 	char* imgpath1 = (char*)path1.c_str();
 
-	string detectparam = R"({"DarkGrayVal":100,"BrightGrayVal":145})";
+	string detectparam = R"({"DarkGrayVal":110,"BrightGrayVal":140})";
 
 	string classparam = R"([{"缺陷名称":"针孔","判断条件1":"面积","判断条件2":"","判断条件3":"","判断条件4":"","判断条件5":"","图标类型":"","图标颜色":"","面积下限mm2":"0.040","面积上限mm2":"0.049","长度下限mm":"","长度上限mm":"","宽度下限mm":"","宽度上限mm":"","长宽比下限":"","长宽比上限":"","平均亮度下限":"","平均亮度上限":"","等级0":"","等级1":"","等级2":"","等级3":"","等级4":""}])";
 	
@@ -1000,6 +1045,5 @@ void main()
 	//for (auto i = 0; i < 1; i++) {
 	//	handle(imgpath, imgpath1, outputinfo, outputInfoLen, outputpixeldata);
 	//}
-	
 	//release(outputinfo);
 }
