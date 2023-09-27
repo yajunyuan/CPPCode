@@ -1,0 +1,27 @@
+推理检测任务接口说明
+    	执行多种检测任务包含OCR字符识别、物体分类、目标检测、目标分割、孔洞检测
+
+文件说明
+	config——配置文件（OCR参数配置、识别参数配置）
+	externalfile——外部依赖库
+	include——项目头文件
+	model——识别任务的模型文件
+	output——输出文件
+
+接口说明
+	推理检测任务初始化——配置参数、加载模型
+	void* AIInit()
+	return
+		识别模型推理的指针
+
+	
+	推理检测接口——OCR字符识别、物体分类、目标检测、目标分割、孔洞检测
+	void DetectInter(void* h, cv::Mat img, int& outputResultLen, RecResult*& outputResult, int detectmode)
+	param	
+		h是初始化识别模型推理的指针
+		img是图像数据
+		detectmode是检测模式（0——OCR字符识别	1——物体分类、目标检测、目标分割	2——孔洞检测）
+
+	return	
+		outputResultLen是结果结构体数组的长度
+		outputResult是结果结构体数组
