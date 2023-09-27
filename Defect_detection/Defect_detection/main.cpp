@@ -11,6 +11,7 @@
 using namespace std;
 using namespace cv;
 
+int PinholeThreshold[2] = { 80, 37 };
 int Threshold[2] = { 100,145 };
 string ClassName[10]; //class名称
 bool ClassFlag[5];
@@ -29,6 +30,8 @@ struct DefectData {
 	int box[4];    //矩形框
 	double ratio; //长宽比
 	double area; //面积
+	int maxgray; //最大亮度
+	int mingray; //最小亮度
 	double avggray; //平均亮度
 	double darkavggray; //暗场平均亮度
 	int classid; //瑕疵类别
@@ -374,6 +377,9 @@ void GetClassJsonParam(char* paramstr) {
 			ClassMap.insert(pair<vector<int>, ClassStr>(classFlagtmp, classStrtmp));
 		}
 	}
+	auto iter = ClassMap.begin();
+	PinholeThreshold[iter->first[0]] = (iter->second.classParam[8] != -1) ? iter->second.classParam[8] : PinholeThreshold[iter->first[0]];
+	PinholeThreshold[next(iter)->first[0]] = (next(iter)->second.classParam[8] != -1) ? next(iter)->second.classParam[8] : PinholeThreshold[next(iter)->first[0]];
 	for (map<vector<int>, ClassStr>::iterator it = ClassMap.begin(); it != ClassMap.end(); it++) {
 		for (int i = 1; i < it->first.size(); i++) {
 			cout << it->first[i] << "  ";
@@ -384,6 +390,7 @@ void GetClassJsonParam(char* paramstr) {
 		}
 		cout << endl;
 	}
+	cout << "针孔透明阈值：" << PinholeThreshold[0] << "    " << PinholeThreshold[1] << endl;
 }
 
 bool adjacencyJudge(uchar data, int minthreshold, int maxthreshold)
@@ -741,7 +748,8 @@ void findcounter(int offsetx, Mat brightImg, Mat darkImg, vector<DefectData>& ou
 		Mat darimgtmp = darkImg(rect);
 		labeltmp.convertTo(labeltmp, CV_16UC1);
 		//imgtmp.convertTo(imgtmp, CV_8UC1);
-
+		datatmp.maxgray = 0;
+		datatmp.mingray = 255;
 		for (auto k = 0; k < labeltmp.size().height; k++) {
 			ushort* labelsdata = (ushort*)(labeltmp.data + labeltmp.step * k);
 			//uchar* imgdata = imgtmp.data + imgtmp.step * k*2; // 明场数据
@@ -751,6 +759,12 @@ void findcounter(int offsetx, Mat brightImg, Mat darkImg, vector<DefectData>& ou
 			bool firstindex = true;
 			for (auto j = 0; j < labeltmp.size().width; j++) {
 				if (labelsdata[j] == 0) continue;
+				if (imgdata[j] > datatmp.maxgray) {
+					datatmp.maxgray = imgdata[j];
+				}
+				if (imgdata[j] < datatmp.mingray) {
+					datatmp.mingray = imgdata[j];
+				}
 				totaldata[labelsdata[j]] += imgdata[j];
 				darktotaldata[labelsdata[j]] += darkdata[j];
 				
@@ -765,7 +779,7 @@ void findcounter(int offsetx, Mat brightImg, Mat darkImg, vector<DefectData>& ou
 							//if (darkdata[j] >= 80) {
 							//	datatmp.pinholeflag = 1;
 							//}
-							if (darkdata[j] >= 80) {
+							if (darkdata[j] >= PinholeThreshold[0]) {
 								if (abs(j - edgeindex) < 3) {
 									datatmp.pinholeflag = 1;
 								}
@@ -775,7 +789,7 @@ void findcounter(int offsetx, Mat brightImg, Mat darkImg, vector<DefectData>& ou
 							}
 						}
 						else {
-							if (darkdata[j] >= 37) {
+							if (darkdata[j] >= PinholeThreshold[1]) {
 								datatmp.pinholeflag = 2;
 							}
 						}
@@ -808,6 +822,7 @@ void findcounter(int offsetx, Mat brightImg, Mat darkImg, vector<DefectData>& ou
 				//	}
 				//}
 			}
+			//瑕疵平均灰度比周围灰度大，去除边缘整体灰度低的区域
 			if (k == labeltmp.size().height - 1) {
 				uchar* briimgdata = brightImg.data + brightImg.step * (k+ top);
 				if (left < 100 || left > labels.size().width - 100) {
@@ -892,7 +907,7 @@ void findcounter(int offsetx, Mat brightImg, Mat darkImg, vector<DefectData>& ou
 			starttmp).count() << "ms" << std::endl;
 }
 
-void CalAvgPixel(Mat brightImg, Mat darkImg, AvgPixelData& avgPixelData)
+void CalAvgPixel(Mat brightImg, Mat darkImg, std::vector<Rect> rectVector, AvgPixelData& avgPixelData)
 {
 	uchar* adata = new uchar[brightImg.size().width-20]; //每列平均像素数据
 	uchar* ddata = new uchar[darkImg.size().width - 20]; //每列平均像素数据
@@ -910,19 +925,24 @@ void CalAvgPixel(Mat brightImg, Mat darkImg, AvgPixelData& avgPixelData)
 			darksumpixel[j - 10] += kdata[j];
 		}
 	}
-	//int mindata = 255;
-	//int maxdata = 110;
+	int startPos = rectVector[0].x + rectVector[0].width / 3;
+	int endPos = rectVector[0].x + 2 * rectVector[0].width / 3;
+	int mindata = 255;
+	int maxdata = 100;
 	for (auto j = 0; j < sumpixel.size(); j++) {
 		adata[j] = int(1.0 * sumpixel[j] / brightImg.size().height*10);
-		//if (adata[j] > maxdata) {
-		//	maxdata = adata[j];
-		//}
-		//if (adata[j] < mindata && adata[j]>110) {
-		//	mindata = adata[j];
-		//}
+		if (j > startPos && j < endPos) {
+			if (adata[j] > maxdata) {
+				maxdata = adata[j];
+			}
+			if (adata[j] < mindata && adata[j]>100) {
+				mindata = adata[j];
+			}
+		}
 	}
-	//Threshold[0] = mindata - 10;
-	//Threshold[1] = maxdata + 10;
+	Threshold[0] = mindata - 10;
+	Threshold[1] = maxdata + 10;
+	cout << "整体灰度上下限：" << Threshold[0] << "   " << Threshold[1] << endl;
 	for (auto j = 0; j < darksumpixel.size(); j++) {
 		ddata[j] = int(1.0*darksumpixel[j] / darkImg.size().height * 10);
 	}
@@ -932,21 +952,21 @@ void CalAvgPixel(Mat brightImg, Mat darkImg, AvgPixelData& avgPixelData)
 	avgPixelData.darkavgpixel = ddata;
 	cout << "cal avgpixel over" <<endl;
 }
-//void handle(char* imgpath, char* imgpath1, DefectData* &outputinfo, int& outputInfoLen,  AvgPixelData& avgPixelData) {
-//	std::string input_ImagePath = imgpath;
-//	std::string input_ImagePath1 = imgpath1;
-//	Mat img1;
-//	Mat darimg1;
-//	ReadImgarray(input_ImagePath, img1);//; ("D://C#//xiaci_pinjie_1209.bmp")
-//	ReadImgarray(input_ImagePath1, darimg1);
-void handle(uchar* data, uchar* data1, int width, int height, int stride, DefectData*& outputinfo, int& outputInfoLen, AvgPixelData& avgPixelData){
-	//c# 图像入口
-	cv::Mat img01 = cv::Mat(cv::Size(width, height), CV_8UC3, data, stride);
+void handle(char* imgpath, char* imgpath1, DefectData* &outputinfo, int& outputInfoLen,  AvgPixelData& avgPixelData) {
+	std::string input_ImagePath = imgpath;
+	std::string input_ImagePath1 = imgpath1;
 	Mat img1;
-	cvtColor(img01, img1, COLOR_BGR2GRAY);
-	cv::Mat img2 = cv::Mat(cv::Size(width, height), CV_8UC3, data1, stride);
 	Mat darimg1;
-	cvtColor(img2, darimg1, COLOR_BGR2GRAY);
+	ReadImgarray(input_ImagePath, img1);//; ("D://C#//xiaci_pinjie_1209.bmp")
+	ReadImgarray(input_ImagePath1, darimg1);
+//void handle(uchar* data, uchar* data1, int width, int height, int stride, DefectData*& outputinfo, int& outputInfoLen, AvgPixelData& avgPixelData){
+//	//c# 图像入口
+//	cv::Mat img01 = cv::Mat(cv::Size(width, height), CV_8UC3, data, stride);
+//	Mat img1;
+//	cvtColor(img01, img1, COLOR_BGR2GRAY);
+//	cv::Mat img2 = cv::Mat(cv::Size(width, height), CV_8UC3, data1, stride);
+//	Mat darimg1;
+//	cvtColor(img2, darimg1, COLOR_BGR2GRAY);
 	auto start = std::chrono::system_clock::now();
 	auto starttmp = std::chrono::system_clock::now();
 
@@ -986,7 +1006,7 @@ void handle(uchar* data, uchar* data1, int width, int height, int stride, Defect
 	//std::vector<Rect> rectVector;
 	//rectVector.push_back(Rect(13360, 0, 17000, 2000));
 	std::vector<std::thread> mythreads;
-	mythreads.push_back(std::thread(CalAvgPixel, img1, darimg1, ref(avgPixelData)));
+	mythreads.push_back(std::thread(CalAvgPixel, img1, darimg1, rectVector, ref(avgPixelData)));
 	if (rectVector.size() == 0) {
 		avgPixelData.initPos = rectVector[0].x - 10;
 		avgPixelData.endPos = rectVector[0].x+ rectVector[0].width+20;
@@ -1028,22 +1048,27 @@ void release(DefectData*& outputinfo)
 
 void main()
 {
-	string path = R"(D:\c++\image\0914\明.bmp)";//R"(D:\c++\Defect_detection\test.bmp)";
+	string path = R"(D:\c++\image\0919\1明.bmp)";//R"(D:\c++\Defect_detection\test.bmp)";
 	char* imgpath = (char*)path.c_str();
-	string path1 = R"(D:\c++\image\0914\暗.bmp)";//R"(D:\c++\Defect_detection\test.bmp)";
+	string path1 = R"(D:\c++\image\0919\1暗.bmp)";//R"(D:\c++\Defect_detection\test.bmp)";
 	char* imgpath1 = (char*)path1.c_str();
 
 	string detectparam = R"({"DarkGrayVal":110,"BrightGrayVal":140})";
 
-	string classparam = R"([{"缺陷名称":"针孔","判断条件1":"面积","判断条件2":"","判断条件3":"","判断条件4":"","判断条件5":"","图标类型":"","图标颜色":"","面积下限mm2":"0.040","面积上限mm2":"0.049","长度下限mm":"","长度上限mm":"","宽度下限mm":"","宽度上限mm":"","长宽比下限":"","长宽比上限":"","平均亮度下限":"","平均亮度上限":"","等级0":"","等级1":"","等级2":"","等级3":"","等级4":""}])";
+	string classparam = R"([{"缺陷名称":"针孔","判断条件1":"平均亮度","判断条件2":"","判断条件3":"","判断条件4":"","判断条件5":"",
+"图标类型":"","图标颜色":"","面积下限mm2":"0.040","面积上限mm2":"0.049","长度下限mm":"","长度上限mm":"","宽度下限mm":"","宽度上限mm":"",
+"长宽比下限":"","长宽比上限":"","平均亮度下限":"80","平均亮度上限":"","等级0":"","等级1":"","等级2":"","等级3":"","等级4":""},
+{"缺陷名称":"透明","判断条件1":"平均亮度","判断条件2":"","判断条件3":"","判断条件4":"","判断条件5":"","图标类型":"","图标颜色":"",
+"面积下限mm2":"0.040","面积上限mm2":"0.049","长度下限mm":"","长度上限mm":"","宽度下限mm":"","宽度上限mm":"","长宽比下限":"","长宽比上限":"",
+"平均亮度下限":"37","平均亮度上限":"","等级0":"","等级1":"","等级2":"","等级3":"","等级4":""}])";
 	
 	GetDetectJsonParam((char*)detectparam.c_str());
 	GetClassJsonParam((char*)classparam.c_str());
 	int outputInfoLen = -1;
 	DefectData* outputinfo;
 	AvgPixelData outputpixeldata;
-	//for (auto i = 0; i < 1; i++) {
-	//	handle(imgpath, imgpath1, outputinfo, outputInfoLen, outputpixeldata);
-	//}
+	for (auto i = 0; i < 2; i++) {
+		handle(imgpath, imgpath1, outputinfo, outputInfoLen, outputpixeldata);
+	}
 	//release(outputinfo);
 }
