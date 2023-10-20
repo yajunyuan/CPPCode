@@ -1,0 +1,6 @@
+﻿  main.cpp
+D:\C#\orthogonal_table\orthogonal_table\main.cpp(34,60): warning C4244: “参数”: 从“double”转换到“const unsigned __int64”，可能丢失数据
+D:\C#\orthogonal_table\orthogonal_table\main.cpp(149,85): warning C4267: “=”: 从“size_t”转换到“int”，可能丢失数据
+D:\C#\orthogonal_table\orthogonal_table\main.cpp(174,10): warning C4244: “初始化”: 从“double”转换到“int”，可能丢失数据
+D:\C#\orthogonal_table\orthogonal_table\main.cpp(214,1): warning C4326: “main”的返回类型应为“int”而非“void”
+  orthogonal_table.vcxproj -> D:\C#\orthogonal_table\x64\Debug\orthogonal_table.exe
