@@ -5,6 +5,9 @@
 #include <opencv2/highgui.hpp>
 #include <onnxruntime_cxx_api.h>	 // C或c++的api
 #include <math.h>
+#include <future>
+#include <thread>
+#pragma warning(disable:4996)
 // 命名空间
 using namespace std;
 using namespace cv;
@@ -42,40 +45,32 @@ typedef struct BoxInfo
 // const float anchors_1280[4][6] = { {19, 27, 44, 40, 38, 94},{96, 68, 86, 152, 180, 137},{140, 301, 303, 264, 238, 542},
 // 					   {436, 615, 739, 380, 925, 792} };
 
-class YOLOv5
+class YOLO
 {
 public:
-	YOLOv5(Configuration config);
-	void detect(Mat& frame, string engine_mode);
+	YOLO(Configuration config);
+	void detect(Mat& frame);
 private:
 	float confThreshold;
 	float nmsThreshold;
 	float objThreshold;
+	string recmode;
+	int mask_num = 32;
 	int inpWidth;
 	int inpHeight;
 	int nout;
+	int yolomode;
 	int num_proposal;
 	int num_classes;
-	string classes[80] = { "person", "bicycle", "car", "motorbike", "aeroplane", "bus",
-							"train", "truck", "boat", "traffic light", "fire hydrant",
-							"stop sign", "parking meter", "bench", "bird", "cat", "dog",
-							"horse", "sheep", "cow", "elephant", "bear", "zebra", "giraffe",
-							"backpack", "umbrella", "handbag", "tie", "suitcase", "frisbee",
-							"skis", "snowboard", "sports ball", "kite", "baseball bat",
-							"baseball glove", "skateboard", "surfboard", "tennis racket",
-							"bottle", "wine glass", "cup", "fork", "knife", "spoon", "bowl",
-							"banana", "apple", "sandwich", "orange", "broccoli", "carrot",
-							"hot dog", "pizza", "donut", "cake", "chair", "sofa", "pottedplant",
-							"bed", "diningtable", "toilet", "tvmonitor", "laptop", "mouse",
-							"remote", "keyboard", "cell phone", "microwave", "oven", "toaster",
-							"sink", "refrigerator", "book", "clock", "vase", "scissors",
-							"teddy bear", "hair drier", "toothbrush" };
-
+	int segMaskWidth;
+	int segMaskHeight;
+	int segMaskChannel;
 	const bool keep_ratio = true;
 	vector<float> input_image_;		// 输入图片
-	void normalize_(Mat img);		// 归一化函数
+	void GetConfigValue(const char* keyName, char* keyValue);
+	void normalize_(Mat img, int channels);		// 归一化函数
 	void nms(vector<BoxInfo>& input_boxes);
-	Mat resize_image(Mat srcimg, int* newh, int* neww, int* top, int* left, string engine_mode);
+	Mat resize_image(Mat srcimg, int* newh, int* neww, int* top, int* left, string recmode);
 
 	
 	Session* ort_session = nullptr;    // 初始化Session指针选项
@@ -88,16 +83,18 @@ private:
 	vector<vector<int64_t>> output_node_dims; // >=1 outputs ,int64_t C/C++标准
 };
 
-YOLOv5::YOLOv5(Configuration config)
+YOLO::YOLO(Configuration config)
 {
 	this->confThreshold = config.confThreshold;
 	this->nmsThreshold = config.nmsThreshold;
 	this->objThreshold = config.objThreshold;
-	this->num_classes = 2;//sizeof(this->classes) / sizeof(this->classes[0]);  // 类别数量
-	this->inpHeight = 640;
-	this->inpWidth = 640;
-
-	string model_path1 = config.modelpath;
+	char engine_filepath[1000] = { 0 };
+	char enginemode[100] = { 0 };
+	GetConfigValue("engine_file_path", engine_filepath);
+	GetConfigValue("engine_mode", enginemode);
+	engine_filepath[strlen(engine_filepath) - 1] = 0;
+	recmode = enginemode;
+	string model_pathtmp = engine_filepath;
 	//std::wstring widestr = std::wstring(model_path.begin(), model_path.end());  //用于UTF-16编码的字符
 
 	////gpu, https://blog.csdn.net/weixin_44684139/article/details/123504222
@@ -108,7 +105,9 @@ YOLOv5::YOLOv5(Configuration config)
 	//ort_session = new Session(env, widestr.c_str(), sessionOptions);  // 创建会话，把模型加载到内存中
 	//ort_session = new Session(env, (const ORTCHAR_T*)model_path.c_str(), sessionOptions); // 创建会话，把模型加载到内存中
 	env = Env(ORT_LOGGING_LEVEL_ERROR, "onnxtest"); // 初始化环境
-	const wchar_t* model_path = L"hole_cls.onnx";
+	wchar_t* model_path = new wchar_t[model_pathtmp.size()];
+	swprintf(model_path, 100, L"%S", model_pathtmp.c_str());
+	//const wchar_t* model_path = L"hole_cls.onnx";
 	ort_session = new Session(env, model_path, sessionOptions);
 	size_t numInputNodes = ort_session->GetInputCount();  //输入输出节点数量                         
 	size_t numOutputNodes = ort_session->GetOutputCount();
@@ -129,20 +128,88 @@ YOLOv5::YOLOv5(Configuration config)
 		auto output_dims = output_tensor_info.GetShape();
 		output_node_dims.push_back(output_dims);
 	}
+	vector<int64_t> outdims;
+	vector<int64_t> outmaskdims;
+	if (output_node_dims.size() > 1) {
+		for (int i = 0; i < output_node_dims.size(); i++) {
+			if (output_node_dims[i].size() == 4) {
+				outmaskdims = output_node_dims[i];
+			}
+			if (output_node_dims[i].size() == 3) {
+				outdims = output_node_dims[i];
+			}
+		}
+	}
+	else {
+		outdims = output_node_dims[0];
+	}
+	if (outdims.size() == 2) { //cls模型无法从数据维度区分v5、v8
+		nout = outdims[0] * outdims[1];
+	}
+	else {
+		if (outdims[1] < outdims[2]) {
+			this->yolomode = 1;
+			this->nout = outdims[1];      // 4+classes
+			this->num_proposal = outdims[2];  // pre_box
+			cout << "the onnx is yolov8" << endl;
+		}
+		else {
+			this->yolomode = 0;
+			this->nout = outdims[2];      // 5+classes
+			this->num_proposal = outdims[1];  // pre_box
+			cout << "the onnx is yolov5" << endl;
+		}
+	}
+	if (recmode == "cls") {
+		num_classes = outdims[1];
+	}
+	else if (recmode == "obj") {
+		if (yolomode == 1) {
+			num_classes = outdims[1]-4;
+		}
+		else {
+			num_classes = outdims[2] - 5;
+		}	
+	}
+	else {
+		if (yolomode == 1) {
+			num_classes = outdims[1] - mask_num- 4;
+		}
+		else {
+			num_classes = outdims[2] - mask_num- 5;
+		}
+		segMaskWidth = outmaskdims[3];
+		segMaskHeight = outmaskdims[2];
+		segMaskChannel = outmaskdims[1];
+	}
 	this->inpHeight = input_node_dims[0][2];
 	this->inpWidth = input_node_dims[0][3];
-	this->nout = output_node_dims[0][2];      // 5+classes
-	this->num_proposal = output_node_dims[0][1];  // pre_box
-
 }
 
-Mat YOLOv5::resize_image(Mat srcimg, int* newh, int* neww, int* top, int* left, string engine_mode)
+void YOLO::GetConfigValue(const char* keyName, char* keyValue)
+{
+	std::string config_file = "./config/recconfig.conf";
+	char buff[300] = { 0 };
+	FILE* file = fopen(config_file.c_str(), "r");
+	while (fgets(buff, 300, file))
+	{
+		char* tempKeyName = strtok(buff, "=");
+		if (!tempKeyName) continue;
+		char* tempKeyValue = strtok(NULL, "=");
+
+		if (!strcmp(tempKeyName, keyName))
+			strcpy(keyValue, tempKeyValue);
+	}
+	fclose(file);
+}
+
+Mat YOLO::resize_image(Mat srcimg, int* newh, int* neww, int* top, int* left, string recmode)
 {
 	int srch = srcimg.rows, srcw = srcimg.cols;
 	*newh = this->inpHeight;
 	*neww = this->inpWidth;
 	Mat dstimg;
-	if (engine_mode=="cls") { //分类——中心裁剪
+	if (recmode =="cls") { //分类——中心裁剪
 		int minSize = std::min(srch, srcw);
 		int topPoint = (srch - minSize) / 2;
 		int leftPoint = (srcw - minSize) / 2;
@@ -175,13 +242,14 @@ Mat YOLOv5::resize_image(Mat srcimg, int* newh, int* neww, int* top, int* left, 
 
 float MeanArray[3] = { 0.485,0.456,0.406 };
 float StdArray[3] = { 0.229, 0.224, 0.225 };
-void YOLOv5::normalize_(Mat img)
+void YOLO::normalize_(Mat img, int channels)
 {
 	//    img.convertTo(img, CV_32F);
+
 	int row = img.rows;
 	int col = img.cols;
 	this->input_image_.resize(row * col * img.channels());  // vector大小
-	for (int c = 0; c < 3; c++)  // bgr
+	for (int c = 0; c < channels; c++)  // bgr
 	{
 		for (int i = 0; i < row; i++)  // 行
 		{
@@ -189,13 +257,15 @@ void YOLOv5::normalize_(Mat img)
 			{
 				float pix = img.ptr<uchar>(i)[j * 3 + 2 - c];  // Mat里的ptr函数访问任意一行像素的首地址,2-c:表示rgb
 				this->input_image_[c * row * col + i * col + j] = pix / 255.0;
-				this->input_image_[c * row * col + i * col + j] = (this->input_image_[c * row * col + i * col + j] - MeanArray[c]) / StdArray[c];
+				if (recmode == "cls") {
+					this->input_image_[c * row * col + i * col + j] = (this->input_image_[c * row * col + i * col + j] - MeanArray[c]) / StdArray[c];
+				}
 			}
 		}
 	}
 }
 
-void YOLOv5::nms(vector<BoxInfo>& input_boxes)
+void YOLO::nms(vector<BoxInfo>& input_boxes)
 {
 	sort(input_boxes.begin(), input_boxes.end(), [](BoxInfo a, BoxInfo b) { return a.score > b.score; }); // 降序排列
 	vector<float> vArea(input_boxes.size());
@@ -294,62 +364,82 @@ vector<float> softmax(vector<float> input)
 	return result;
 }
 
-void YOLOv5::detect(Mat& frame, string engine_mode)
+void YOLO::detect(Mat& frame)
 {
 	int newh = 0, neww = 0, padh = 0, padw = 0;
-	Mat dstimg = this->resize_image(frame, &newh, &neww, &padh, &padw, engine_mode);
-	this->normalize_(dstimg);
+	Mat dstimg = this->resize_image(frame, &newh, &neww, &padh, &padw, recmode);
+	this->normalize_(dstimg, frame.channels());
 	// 定义一个输入矩阵，int64_t是下面作为输入参数时的类型
-	array<int64_t, 4> input_shape_{ 1, 3, this->inpHeight, this->inpWidth };
+	array<int64_t, 4> input_shape_{ 1, frame.channels(), this->inpHeight, this->inpWidth };
 
 	//创建输入tensor
 	auto allocator_info = MemoryInfo::CreateCpu(OrtDeviceAllocator, OrtMemTypeCPU);
-	Value input_tensor_ = Value::CreateTensor<float>(allocator_info, input_image_.data(), input_image_.size(), input_shape_.data(), input_shape_.size());
+	Value input_tensor_ = Value::CreateTensor<float>(allocator_info, input_image_.data(),
+		input_image_.size(), input_shape_.data(), input_shape_.size());
 
 	// 开始推理
-	vector<Value> ort_outputs = ort_session->Run(RunOptions{ nullptr }, &input_names[0], &input_tensor_, 1, output_names.data(), output_names.size());   // 开始推理
+	vector<Value> ort_outputs = ort_session->Run(RunOptions{ nullptr }, &input_names[0], &input_tensor_, 1,
+		output_names.data(), output_names.size());   // 开始推理
 	/////generate proposals
 	vector<BoxInfo> generate_boxes;  // BoxInfo自定义的结构体
 	float ratioh = (float)frame.rows / newh, ratiow = (float)frame.cols / neww;
-	float* pdata = ort_outputs[0].GetTensorMutableData<float>(); // GetTensorMutableData
-	if (engine_mode == "cls") {
-		vector<float> vecprobtmp(pdata, pdata + num_proposal);
-		vector<float> vecprob = softmax(vecprobtmp);
-		std::cout << vecprob[0] << "  " << vecprob[1] << " " << vecprob[2] << " " << arg_max(vecprob) << std::endl;
+	float* prob = ort_outputs[0].GetTensorMutableData<float>(); // GetTensorMutableData
+	if (recmode == "cls") {
+		vector<float> vecprobtmp(prob, prob + nout);
+		vector<float> vecprob;
+		if (find_if(vecprobtmp.begin(), vecprobtmp.end(), [](float i) { return i > 1; }) != vecprobtmp.end()) {
+			vecprob = softmax(vecprobtmp);
+		}
+		else {
+			vecprob = vecprobtmp;
+		}
+		std::cout << "label: " << arg_max(vecprob)<<"   score: " <<vecprob[arg_max(vecprob)] << std::endl;
 	}
-	if (engine_mode == "obj") {
-		for (int i = 0; i < num_proposal; ++i) // 遍历所有的num_pre_boxes
+	if (recmode == "obj") {
+		int numbox = -1, boxscore = 0;
+		float* pdata;
+		if (yolomode == 1) {
+			numbox = num_proposal;
+			boxscore = 4;
+			cv::Mat outputtrans = cv::Mat(num_classes + 4, numbox, CV_32F, prob).t();
+			pdata = outputtrans.ptr<float>();
+		}else {
+			numbox = 1000;
+			boxscore = 5;
+			pdata = prob;
+		}
+		for (int i = 0; i < numbox; ++i) // 遍历所有的num_pre_boxes
 		{
 			int index = i * nout;      // prob[b*num_pred_boxes*(classes+5)]  
 			float obj_conf = pdata[index + 4];  // 置信度分数
-			if (obj_conf > this->objThreshold)  // 大于阈值
+			if (yolomode == 0 && obj_conf < this->objThreshold) continue;
+			int class_idx = 0;
+			float max_class_socre = 0;
+			for (int k = 0; k < this->num_classes; ++k)
 			{
-				int class_idx = 0;
-				float max_class_socre = 0;
-				for (int k = 0; k < this->num_classes; ++k)
+				if (pdata[k + index + boxscore] > max_class_socre)
 				{
-					if (pdata[k + index + 5] > max_class_socre)
-					{
-						max_class_socre = pdata[k + index + 5];
-						class_idx = k;
-					}
+					max_class_socre = pdata[k + index + boxscore];
+					class_idx = k;
 				}
+			}
+			if (yolomode == 0) {
 				max_class_socre *= obj_conf;   // 最大的类别分数*置信度
-				if (max_class_socre > this->confThreshold) // 再次筛选
-				{
-					//const int class_idx = classIdPoint.x;
-					float cx = pdata[index];  //x
-					float cy = pdata[index + 1];  //y
-					float w = pdata[index + 2];  //w
-					float h = pdata[index + 3];  //h
+			}
+			if (max_class_socre > this->confThreshold) // 再次筛选
+			{
+				//const int class_idx = classIdPoint.x;
+				float cx = pdata[index];  //x
+				float cy = pdata[index + 1];  //y
+				float w = pdata[index + 2];  //w
+				float h = pdata[index + 3];  //h
 
-					float xmin = (cx - padw - 0.5 * w) * ratiow;
-					float ymin = (cy - padh - 0.5 * h) * ratioh;
-					float xmax = (cx - padw + 0.5 * w) * ratiow;
-					float ymax = (cy - padh + 0.5 * h) * ratioh;
+				float xmin = (cx - padw - 0.5 * w) * ratiow;
+				float ymin = (cy - padh - 0.5 * h) * ratioh;
+				float xmax = (cx - padw + 0.5 * w) * ratiow;
+				float ymax = (cy - padh + 0.5 * h) * ratioh;
 
-					generate_boxes.push_back(BoxInfo{ xmin, ymin, xmax, ymax, max_class_socre, class_idx });
-				}
+				generate_boxes.push_back(BoxInfo{ xmin, ymin, xmax, ymax, max_class_socre, class_idx });
 			}
 		}
 
@@ -362,7 +452,6 @@ void YOLOv5::detect(Mat& frame, string engine_mode)
 			int ymin = int(generate_boxes[i].y1);
 			rectangle(frame, Point(xmin, ymin), Point(int(generate_boxes[i].x2), int(generate_boxes[i].y2)), Scalar(0, 0, 255), 2);
 			string label = format("%.2f", generate_boxes[i].score);
-			label = this->classes[generate_boxes[i].label] + ":" + label;
 			cout << (generate_boxes[i].x1 + generate_boxes[i].x2) / 2 / frame.cols << endl;
 			cout << (generate_boxes[i].y1 + generate_boxes[i].y2) / 2 / frame.rows << endl;
 			cout << (generate_boxes[i].x2 - generate_boxes[i].x1) / frame.cols << endl;
@@ -372,36 +461,210 @@ void YOLOv5::detect(Mat& frame, string engine_mode)
 			putText(frame, label, Point(xmin, ymin - 5), FONT_HERSHEY_SIMPLEX, 0.75, Scalar(0, 255, 0), 1);
 		}
 	}
+
+	if (recmode == "seg") {
+		float* prob1 = ort_outputs[1].GetTensorMutableData<float>();
+		int numbox = -1, boxscore = 0;
+		float* pdata;
+		if (yolomode == 1) {
+			numbox = num_proposal;
+			boxscore = 4;
+			cv::Mat outputtrans = cv::Mat(num_classes + 4 + segMaskChannel, numbox, CV_32F, prob).t();
+			pdata = outputtrans.ptr<float>();
+		}
+		else {
+			numbox = 1000;
+			boxscore = 5;
+			pdata = prob;
+		}
+		for (int i = 0; i < numbox; ++i) // 遍历所有的num_pre_boxes
+		{
+			int index = i * nout;      // prob[b*num_pred_boxes*(classes+5)]  
+			float obj_conf = pdata[index + 4];  // 置信度分数
+			if (yolomode == 0 && obj_conf < this->objThreshold) continue;
+			int class_idx = 0;
+			float max_class_socre = 0;
+			for (int k = 0; k < this->num_classes; ++k)
+			{
+				if (pdata[k + index + boxscore] > max_class_socre)
+				{
+					max_class_socre = pdata[k + index + boxscore];
+					class_idx = k;
+				}
+			}
+			if (yolomode == 0) {
+				max_class_socre *= obj_conf;   // 最大的类别分数*置信度
+			}
+			if (max_class_socre > this->confThreshold) // 再次筛选
+			{
+				//const int class_idx = classIdPoint.x;
+				float cx = pdata[index];  //x
+				float cy = pdata[index + 1];  //y
+				float w = pdata[index + 2];  //w
+				float h = pdata[index + 3];  //h
+
+				float xmin = MAX((cx - padw - 0.5 * w) * ratiow,0);
+				float ymin = MAX((cy - padh - 0.5 * h) * ratioh,0);
+				float xmax = (cx - padw + 0.5 * w) * ratiow;
+				float ymax = (cy - padh + 0.5 * h) * ratioh;
+
+				generate_boxes.push_back(BoxInfo{ xmin, ymin, xmax, ymax, max_class_socre, class_idx });
+			}
+		}
+
+		// Perform non maximum suppression to eliminate redundant overlapping boxes with
+		// lower confidences
+		nms(generate_boxes);
+		for (size_t i = 0; i < generate_boxes.size(); ++i)
+		{
+			int xmin = int(generate_boxes[i].x1);
+			int ymin = int(generate_boxes[i].y1);
+			rectangle(frame, Point(xmin, ymin), Point(int(generate_boxes[i].x2), int(generate_boxes[i].y2)), Scalar(0, 0, 255), 2);
+			string label = format("%.2f", generate_boxes[i].score);
+			cout << generate_boxes[i].x1 << endl;
+			cout << generate_boxes[i].y1 << endl;
+			cout << generate_boxes[i].x2 - generate_boxes[i].x1 << endl;
+			cout << generate_boxes[i].y2 - generate_boxes[i].y1 << endl;
+			cout << generate_boxes[i].label << endl;
+			cout << generate_boxes[i].score << endl;
+			putText(frame, label, Point(xmin, ymin - 5), FONT_HERSHEY_SIMPLEX, 0.75, Scalar(0, 255, 0), 1);
+		}
+	}
+}
+
+extern "C"
+{
+	__declspec(dllexport) void* AiCPUInit();
+	__declspec(dllexport) void AiCPUDetect(void* h, cv::Mat img);
+	__declspec(dllexport) void AiCPUDetectImg(void* h);
+}
+
+void* AiCPUInit() {
+	Configuration yolo_nets = { 0.25, 0.5, 0.25 };
+	YOLO* yolo_modelptr = new YOLO(yolo_nets);
+	return (void*)yolo_modelptr;
+}
+
+void AiCPUDetect(void* h, cv::Mat img) {
+	YOLO* modelptr = (YOLO*)h;
+	modelptr->detect(img);
+}
+
+vector<string> split(string str, string sep)
+{
+	vector<string> result; // 存储分割后的子串
+	int start = 0; // 起始位置
+	int end = 0; // 结束位置
+	while ((end = str.find(sep, start)) != string::npos) // 查找分隔符
+	{
+		result.push_back(str.substr(start, end - start)); // 截取子串并存入向量
+		start = end + sep.size(); // 更新起始位置
+	}
+	result.push_back(str.substr(start)); // 处理最后一个子串
+	return result;
+}
+
+void find_circle(void* init, string image)
+{
+	Mat img = imread(image);
+	Mat img_gray;
+	cvtColor(img, img_gray, COLOR_BGR2GRAY);
+
+	// 设置阈值和最大值
+	double thresh = 150;
+	double maxval = 255;
+	Mat kernel = getStructuringElement(MORPH_RECT, Size(31, 31)); // 矩形结构元素
+	// 使用cv::threshold()函数进行阈值分割
+	Mat img_binary;
+	Mat roi(img_gray, Rect(300, 300, 5000, 2500));
+	threshold(roi, img_binary, thresh, maxval, THRESH_BINARY);
+	Mat img_close;
+	morphologyEx(img_binary, img_close, MORPH_OPEN, kernel, Point(-1, -1), 3);
+	Mat img_binary1;
+	threshold(img_close, img_binary1, thresh, maxval, THRESH_BINARY_INV);
+
+	// 使用cv::findContours()函数查找图像中的轮廓
+	vector<vector<Point>> contours;
+	vector<Vec4i> hierarchy;
+	findContours(img_binary1, contours, hierarchy, RETR_EXTERNAL, CHAIN_APPROX_SIMPLE);
+	//string sep = "\\";
+	//vector<std::string> result = split(image, sep);
+	//string sep1 = ".";
+	//vector<std::string> result1 = split(result[2], sep1);
+	// 遍历查找到的轮廓
+	for (size_t i = 0; i < contours.size(); i++)
+	{
+		if (contours[i].size() < 20) {
+			continue;
+		}
+		// 使用cv::minEnclosingCircle()函数计算轮廓的最小外接圆
+		Point2f center;
+		float radius;
+		minEnclosingCircle(contours[i], center, radius);
+
+		// 画出轮廓和最小外接圆
+		drawContours(img_binary1, contours, i, Scalar(0, 255, 0), 2, 8, hierarchy);
+		circle(img_binary1, center, radius, Scalar(0, 0, 255), 2, 8, 0);
+
+		// 计算外接矩形的坐标
+		int x = center.x - radius;
+		int y = center.y - radius;
+		int w = radius * 2;
+		int h = radius * 2;
+		Mat roi1(roi, Rect(x - 50, y - 50, w + 100, h + 60));
+		Mat roiinput;
+		cvtColor(roi1, roiinput, COLOR_GRAY2BGR);
+		cout << "image: " << image <<"  第" << i+1<<"个区域："<< endl;
+		AiCPUDetect(init, roiinput);
+		//imwrite(path + result1[0] + "-" + to_string(i) + ".jpg", roi1);
+
+		// 画出外接矩形
+		//rectangle(roi, Rect(x, y, w, h), Scalar(255, 0, 0), 2, 8, 0);
+	}
+}
+
+void AiCPUDetectImg(void* h) {
+	string path = R"(./img/)";
+	//string save_path = R"(D:\shuju\small\)";
+	string pattern = "*.tif";
+	vector<cv::String> filenames;
+	glob(path + pattern, filenames, false);
+	for (auto filename : filenames) {
+		find_circle(h, filename);
+	}
+	// 创建一个 std::future 的容器
+	//vector<std::future<void>> futures;
+
+	//for (size_t i = 0; i < filenames.size(); i++) {
+	//	// 使用 std::async 异步执行 find_circle 函数，并将返回的 std::future 对象添加到容器中
+	//	futures.push_back(std::async(std::launch::async, find_circle, h, filenames[i]));
+	//}
+
+	//// 遍历容器，等待每个线程的完成
+	//for (auto& f : futures) {
+	//	f.get();
+	//}
 }
 
 int main(int argc, char* argv[])
 {
 	clock_t startTime, endTime; //计算时间
-	Configuration yolo_nets = { 0.3, 0.5, 0.3,"hole_cls.onnx" };
-	YOLOv5 yolo_model(yolo_nets);
-	std::string imgDir = "D:\\test\\good\\";
-	std::vector<cv::String> imgLists;
-	//string imgpath = R"(D:\my_yolov5\data\C0\JPEGImages\20200404051008-C0910-5.jpg)";
-//string imgpath = R"(D:\test\bad\BottomLeft3185045-0.jpg)";
-	//Mat srcimg = imread(imgpath);
-	cv::glob(imgDir, imgLists, false);
-	for (auto img : imgLists) {
-		std::cout << std::string(img) << std::endl;
-		cv::Mat srcimg = cv::imread(img);
-		double timeStart = (double)getTickCount();
-		startTime = clock();//计时开始	
-		yolo_model.detect(srcimg, "cls");
-		endTime = clock();//计时结束
-		cout << "clock_running time is:" << (double)(endTime - startTime) / CLOCKS_PER_SEC << "s" << endl;
-	}
+	string img= R"(D:\test\good\BottomLeft1182817-0.jpg)";
+	//cv::Mat srcimg = cv::imread(img);
+	//AiCPUDetect(AiCPUInit(), srcimg);
+	AiCPUDetectImg(AiCPUInit());
+	//std::string imgDir = "D:\\test\\good\\";
+	//std::vector<cv::String> imgLists;
+	//cv::glob(imgDir, imgLists, false);
+	//for (auto img : imgLists) {
+	//	std::cout << std::string(img) << std::endl;
+	//	cv::Mat srcimg = cv::imread(img);
+	//	double timeStart = (double)getTickCount();
+	//	startTime = clock();//计时开始	
+	//	yolo_modelptr->detect(srcimg);
+	//	endTime = clock();//计时结束
+	//	cout << "clock_running time is:" << (double)(endTime - startTime) / CLOCKS_PER_SEC << "s" << endl;
+	//}
 
-
-
-	// static const string kWinName = "Deep learning object detection in ONNXRuntime";
-	// namedWindow(kWinName, WINDOW_NORMAL);
-	// imshow(kWinName, srcimg);
-	//imwrite("restult_ort.jpg", srcimg);
-	// waitKey(0);
-	// destroyAllWindows();
 	return 0;
 }
