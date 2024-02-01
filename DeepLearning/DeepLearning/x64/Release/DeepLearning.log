@@ -1,0 +1,37 @@
+﻿  main.cpp
+D:\c++\DeepLearning\externalfile\TensorRT-8.4.0.6.Windows10.x86_64.cuda-11.6.cudnn8.3\TensorRT-8.4.0.6\include\NvInfer.h(5337,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+D:\c++\DeepLearning\DeepLearning\main.cpp(221,17): warning C4244: “初始化”: 从“const _Ty”转换到“float”，可能丢失数据
+          with
+          [
+              _Ty=double
+          ]
+D:\c++\DeepLearning\DeepLearning\main.cpp(241,101): warning C4305: “参数”: 从“double”到“float”截断
+D:\c++\DeepLearning\DeepLearning\main.cpp(244,41): warning C4267: “=”: 从“size_t”转换到“int”，可能丢失数据
+D:\c++\DeepLearning\DeepLearning\main.cpp(249,59): warning C4244: “=”: 从“float”转换到“int”，可能丢失数据
+D:\c++\DeepLearning\DeepLearning\main.cpp(251,47): warning C4244: “=”: 从“float”转换到“int”，可能丢失数据
+D:\c++\DeepLearning\DeepLearning\main.cpp(262,41): warning C4267: “=”: 从“size_t”转换到“int”，可能丢失数据
+D:\c++\DeepLearning\DeepLearning\main.cpp(267,59): warning C4244: “=”: 从“float”转换到“int”，可能丢失数据
+D:\c++\DeepLearning\DeepLearning\main.cpp(269,47): warning C4244: “=”: 从“float”转换到“int”，可能丢失数据
+D:\c++\DeepLearning\DeepLearning\main.cpp(280,13): warning C4326: “main”的返回类型应为“int”而非“void”
+D:\c++\DeepLearning\DeepLearning\BaseOperation.h(34,1): warning C4244: “/=”: 从“double”转换到“_Ty”，可能丢失数据
+          with
+          [
+              _Ty=float
+          ]
+D:\c++\DeepLearning\DeepLearning\main.cpp(231): message : 查看对正在编译的函数 模板 实例化“void softmax<float>(const std::vector<float,std::allocator<float>> &,std::vector<float,std::allocator<float>> &)”的引用
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Professional\VC\Tools\MSVC\14.29.30133\include\algorithm(2650,24): warning C4244: “=”: 从“double”转换到“float”，可能丢失数据
+D:\c++\DeepLearning\DeepLearning\BaseOperation.h(31): message : 查看对正在编译的函数 模板 实例化“_OutIt std::transform<std::_Vector_const_iterator<std::_Vector_val<std::_Simple_types<_Ty>>>,std::_Vector_iterator<std::_Vector_val<std::_Simple_types<_Ty>>>,double(__cdecl *)(double)>(const _InIt,const _InIt,_OutIt,_Fn)”的引用
+          with
+          [
+              _OutIt=std::_Vector_iterator<std::_Vector_val<std::_Simple_types<float>>>,
+              _Ty=float,
+              _InIt=std::_Vector_const_iterator<std::_Vector_val<std::_Simple_types<float>>>,
+              _Fn=double (__cdecl *)(double)
+          ]
+D:\c++\DeepLearning\DeepLearning\main.cpp(231): message : 查看对正在编译的函数 模板 实例化“void softmax<float>(const std::vector<float,std::allocator<float>> &,std::vector<float,std::allocator<float>> &)”的引用
+  正在生成代码
+  8 of 926 functions ( 0.9%) were compiled, the rest were copied from previous compilation.
+    5 functions were new in current compilation
+    13 functions had inline decision re-evaluated but remain unchanged
+  已完成代码的生成
+  DeepLearning.vcxproj -> D:\c++\DeepLearning\x64\Release\DeepLearning.exe
