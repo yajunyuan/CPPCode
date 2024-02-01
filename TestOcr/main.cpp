@@ -25,6 +25,7 @@
 #include <include/paddleocr.h>
 #include <include/paddlestructure.h>
 #include <gflags/gflags.h>
+
 //#include "yolo.h"
 using namespace PaddleOCR;
 using namespace nvinfer1;
@@ -425,17 +426,20 @@ void* AIInit()//(char* engineFilePath, char* engineMode)
         NUM_CLASSES = out_dims.d[1];
     }
     else if (engine_mode == "obj") {
-        NUM_CLASSES = out_dims.d[2] - 5;
+        //NUM_CLASSES = out_dims.d[2] - 5;
+        NUM_CLASSES = out_dims.d[1] - 4;
     }
     else {
-        NUM_CLASSES = out_dims.d[2] - MASK_NUM - 5;
+        //NUM_CLASSES = out_dims.d[2] - MASK_NUM - 5;
+        NUM_CLASSES = out_dims.d[1] - MASK_NUM - 4;
     }
     for (int j = 0; j < out_dims.nbDims; j++) {
         trt->output_size *= out_dims.d[j];
     }
 
     trt->prob = new float[trt->output_size];
-    trt->Num_box = out_dims.d[1];
+    //trt->Num_box = out_dims.d[1];
+    trt->Num_box = out_dims.d[2];
     trt->inputindex = inputIndex;
     trt->outputindex = outputIndex;
     // Create GPU buffers on device
@@ -626,19 +630,25 @@ float iou(float lbox[4], float rbox[4]) {
 }
 
 void nms(std::vector<Object>& res, float* output, float conf_thresh, float nms_thresh = 0.5) {
-    int mi = NUM_CLASSES + 5;
+    int mi = NUM_CLASSES + 4;
     int det_size = sizeof(Object) / sizeof(float);
     std::map<float, std::vector<Object>> m;
-    for (int i = 0; i < 1000; i++) {
-        if (output[mi * i + 4] <= conf_thresh) continue;
+    for (int i = 0; i < 8400; i++) {
+        //if (output[mi * i + 4] <= conf_thresh) continue; //yolov5
         float tmp = 0.0;
-        for (int j = 5; j < mi; j++) {
-            output[mi * i + j] *= output[mi * i + 4];
+        float labeltmp = -1;
+        for (int j = 4; j < mi; j++) {
+            //output[mi * i + j] *= output[mi * i + 4]; //yolov5
             if (output[mi * i + j] > tmp) {
                 tmp = output[mi * i + j];
-                output[mi * i + 5] = j - 5;
+                labeltmp = j - 4; //yolov8
+                //output[mi * i + 5] = j - 5;  //yolov5
             }
         }
+        output[mi * i + 4] = tmp;
+        output[mi * i + 5] = labeltmp;
+
+        if (tmp < conf_thresh) continue;
         Object det;
         memcpy(&det, &output[mi * i], det_size * sizeof(float));
         if (m.count(det.label) == 0) m.emplace(det.label, std::vector<Object>());
@@ -688,8 +698,11 @@ void AIDetect(void* h, cv::Mat img, int& outputResultLen, RecResult*& outputResu
         std::cout << outputResult[0].label<< " " <<outputResult[0].score << std::endl;
     }
     if (trt->engine_mode == "obj") {
+        //yolov8 
+        cv::Mat output = cv::Mat(NUM_CLASSES+4, trt->Num_box,  CV_32F, trt->prob).t();
+        float* array =  output.ptr<float>();
         std::vector<Object> objects;
-        nms(objects, trt->prob, BBOX_CONF_THRESH, NMS_THRESH);
+        nms(objects, array, BBOX_CONF_THRESH, NMS_THRESH);
         auto end = std::chrono::system_clock::now();
         std::cout << std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count() << "ms" << std::endl;
         outputResultLen = objects.size();
@@ -698,9 +711,11 @@ void AIDetect(void* h, cv::Mat img, int& outputResultLen, RecResult*& outputResu
         {
             for (auto j = 0; j < 4; j++) {
                 outputResult[i].box[j] = objects[i].bbox[j];
+                std::cout << outputResult[i].box[j] << std::endl;
             }
             outputResult[i].label = objects[i].label;
             outputResult[i].score = objects[i].prob;
+            std::cout << outputResult[i].label << " " << outputResult[i].score << std::endl;
         }
     }
     if (trt->engine_mode == "seg") {
@@ -885,7 +900,7 @@ void main() {
     Yolov5TRTContext* trt = (Yolov5TRTContext*)AIInit();
     cv::Mat img = cv::imread("C:\\Users\\rs\\Desktop\\ocr.png", cv::IMREAD_COLOR);
     OcrDetect(img, outputResultLen, outputResult);
-    std::string imgpath = R"(D:\yolov5\yolov5\data\XINJIE\images\A4221205095706001_0_C157.jpeg)";
+    std::string imgpath = R"(D:\yolov8\ultralytics\data\C0\JPEGImages\20200404051008-C0910-5.jpg)";
     cv::Mat imgdata = cv::imread(imgpath);
     AIDetect(trt, imgdata, outputResultLen, outputResult); 
     //DnnDetect();
