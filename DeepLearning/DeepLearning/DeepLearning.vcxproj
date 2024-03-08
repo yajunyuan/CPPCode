@@ -46,7 +46,7 @@
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v142</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
@@ -81,8 +81,8 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>..\externalfile\TensorRT-8.4.0.6.Windows10.x86_64.cuda-11.6.cudnn8.3\TensorRT-8.4.0.6\include;..\externalfile\opencv\build\include\;$(CUDA_PATH)\include;$(IncludePath)</IncludePath>
-    <LibraryPath>..\externalfile\opencv\build\x64\vc15\lib;..\externalfile\TensorRT-8.4.0.6.Windows10.x86_64.cuda-11.6.cudnn8.3\TensorRT-8.4.0.6\lib;$(CUDA_PATH)\lib\x64;$(LibraryPath)</LibraryPath>
+    <IncludePath>.\TensorRT-8.4.0.6\include;.\opencv\build\include\;.\CUDA\include;$(IncludePath)</IncludePath>
+    <LibraryPath>.\opencv\build\x64\vc15\lib;.\TensorRT-8.4.0.6\lib;.\CUDA\lib\x64;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>

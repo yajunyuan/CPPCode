@@ -4,7 +4,14 @@
 using namespace nvinfer1;
 static Logger gLogger;
 BaseOperation baseOperation;
-void* AIInit()//(char* engineFilePath, char* engineMode)
+
+extern "C"
+{
+    __declspec(dllexport) void* AiGPUInit(const char* modelpath, const char* modelmode);
+    __declspec(dllexport) void AiGPUDetectPath(void* h, const char* imgpath, BaseOperation::RecResult*& output, int& outlen);
+}
+
+void* AiGPUInit(const char* engineFilePath, const char* engineMode)
 {
     //detect init
     int dev_num = 0;
@@ -15,29 +22,29 @@ void* AIInit()//(char* engineFilePath, char* engineMode)
         printf("Result = FAIL\n");
         return nullptr;
     }
-    char engine_filepath[1000] = { 0 };
-    char enginemode[100] = { 0 };
-    char input_w[100] = { 0 };
-    char input_h[100] = { 0 };
-    char num_class[100] = { 0 };
-    baseOperation.GetConfigValue("engine_file_path", engine_filepath);
-    baseOperation.GetConfigValue("engine_mode", enginemode);
+    //char engine_filepath[1000] = { 0 };
+    //char enginemode[100] = { 0 };
+    //char input_w[100] = { 0 };
+    //char input_h[100] = { 0 };
+    //char num_class[100] = { 0 };
+    //baseOperation.GetConfigValue("engine_file_path", engine_filepath);
+    //baseOperation.GetConfigValue("engine_mode", enginemode);
     //GetConfigValue("INPUT_W", input_w);
     //GetConfigValue("INPUT_H", input_h);
     //GetConfigValue("NUM_CLASSES", num_class);
-    engine_filepath[strlen(engine_filepath) - 1] = 0;
+    //engine_filepath[strlen(engine_filepath) - 1] = 0;
     //enginemode[strlen(enginemode) - 1] = 0;
     //INPUT_W = atoi(input_w);
     //INPUT_H = atoi(input_h);
     //NUM_CLASSES = atoi(num_class);
-    std::string engine_mode = enginemode;
+    std::string engine_mode = engineMode;
     /*std::string engine_mode = (char*)engineMode;*/
     cudaSetDevice(DEVICE);
     // create a model using the API directly and serialize it to a stream
     char* trtModelStream{ nullptr };
     size_t size{ 0 };
     //if (argc == 3 && std::string(argv[2]) == "-i") {
-    std::string engine_file = engine_filepath;
+    std::string engine_file = engineFilePath;
     /*const std::string engine_file = (char*)engineFilePath;*/
     //std::cout << engine_file.length() << " -------"<< engine_file << std::endl;
     std::ifstream file(engine_file, std::ios::binary);
@@ -208,7 +215,7 @@ void* AIInit()//(char* engineFilePath, char* engineMode)
     return (void*)trt;
 }
 
-void AIDetect(void* h, cv::Mat img, int& outputResultLen, BaseOperation::RecResult*& outputResult) {
+void AIDetect(void* h, cv::Mat img, std::string imgname, std::vector<BaseOperation::RecResult>& output) {
     BaseOperation::Yolov5TRTContext* trt = (BaseOperation::Yolov5TRTContext*)h;
     //int img_w = img.cols;
     //int img_h = img.rows;
@@ -224,33 +231,34 @@ void AIDetect(void* h, cv::Mat img, int& outputResultLen, BaseOperation::RecResu
 
     auto end = std::chrono::system_clock::now();
     std::cout << "doInference: " << std::chrono::duration_cast<std::chrono::microseconds>(end - start).count() / 1000.0 << "ms" << std::endl;
-
+    BaseOperation::RecResult resulttmp;
+    strcpy(resulttmp.imgname, imgname.c_str());
     if (trt->engine_mode == "cls") {
         std::vector<float> vecprob(trt->prob, trt->prob + trt->output_size), vecprob1(vecprob);;
         if (find_if(vecprob.begin(), vecprob.end(), [](float i) { return i > 1; }) != vecprob.end()) {
             softmax(vecprob, vecprob1);//yolov8²»ÐèÒªsoftmax
         }
-        outputResultLen = 1;
-        outputResult = new BaseOperation::RecResult[outputResultLen];
-        outputResult[0].label = arg_max(vecprob1);
-        outputResult[0].score = vecprob1[outputResult[0].label];
-        std::cout << outputResult[0].label << " " << outputResult[0].score << std::endl;
+        resulttmp.id = arg_max(vecprob1);
+        resulttmp.confidence = vecprob1[resulttmp.id];
+        output.push_back(resulttmp);
+        std::cout << resulttmp.id << " " << resulttmp.confidence << std::endl;
     }
     if (trt->engine_mode == "obj") {
         std::vector<BaseOperation::Object> objects;
-        baseOperation.ObjPostprocess(objects, trt->prob, BBOX_CONF_THRESH, NMS_THRESH, trt->yolomode);
+        baseOperation.ObjPostprocess(objects, trt->prob, trt->num_box, BBOX_CONF_THRESH, NMS_THRESH, trt->yolomode);
         auto end = std::chrono::system_clock::now();
         std::cout << std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count() << "ms" << std::endl;
-        outputResultLen = objects.size();
-        outputResult = new BaseOperation::RecResult[outputResultLen];
+        //outputResultLen = objects.size();
+        //outputResult = new BaseOperation::RecResult[outputResultLen];
         for (int i = 0; i < objects.size(); i++)
         {
             for (auto j = 0; j < 4; j++) {
-                outputResult[i].box[j] = objects[i].bbox[j];
+                resulttmp.box[j] = objects[i].bbox[j];
             }
-            outputResult[i].label = objects[i].label;
-            outputResult[i].score = objects[i].prob;
-            std::cout << outputResult[i].label << " " << outputResult[i].score << std::endl;
+            resulttmp.id = objects[i].label;
+            resulttmp.confidence = objects[i].prob;
+            output.push_back(resulttmp);
+            std::cout << resulttmp.id << " " << resulttmp.confidence << std::endl;
         }
         
     }
@@ -259,29 +267,56 @@ void AIDetect(void* h, cv::Mat img, int& outputResultLen, BaseOperation::RecResu
         std::vector<int> segMaskParams = { trt->_segChannels, trt->num_box };
         std::vector<BaseOperation::Object> objects;
         baseOperation.SegPostprocess(objects, trt->prob, imgSize, padsize, segMaskParams, trt->yolomode);;
-        outputResultLen = objects.size();
-        outputResult = new BaseOperation::RecResult[outputResultLen];
+        //outputResultLen = objects.size();
+        //outputResult = new BaseOperation::RecResult[outputResultLen];
         for (int i = 0; i < objects.size(); i++)
         {
             for (auto j = 0; j < 4; j++) {
-                outputResult[i].box[j] = objects[i].bbox[j];
+                resulttmp.box[j] = objects[i].bbox[j];
             }
-            outputResult[i].label = objects[i].label;
-            outputResult[i].score = objects[i].prob;
-            std::cout << outputResult[i].box[0] << "  " << outputResult[i].box[1] << "  " << outputResult[i].box[2]
-                << "  " << outputResult[i].box[3] << "  " << outputResult[i].label<<"  " << outputResult[i].score << std::endl;
+            resulttmp.id = objects[i].label;
+            resulttmp.confidence = objects[i].prob;
+            output.push_back(resulttmp);
+            std::cout << resulttmp.box[0] << "  " << resulttmp.box[1] << "  " << resulttmp.box[2]
+                << "  " << resulttmp.box[3] << "  " << resulttmp.id<<"  " << resulttmp.confidence << std::endl;
             //temp_mask_proposals.push_back(picked_proposals[idx]);
         }
     }
     delete blob;
 }
 
+void AiGPUDetectPath(void* h, const char* imgpath, BaseOperation::RecResult*& result, int& outlen) {
+    std::vector<cv::String> imgLists;
+    std::string path;
+    path = imgpath;
+    cv::glob(path, imgLists, true);
+    std::vector<BaseOperation::RecResult> output;
+    for (auto img : imgLists) {
+        std::cout << std::string(img) << std::endl;
+        cv::Mat srcimg = cv::imread(img);
+        std::string imgname = img.substr(path.size() + 1);
+        AIDetect(h, srcimg, imgname, output);
+    }
+    outlen = output.size();
+    result = new BaseOperation::RecResult[outlen];
+    memcpy(result, &output[0], outlen * sizeof(BaseOperation::RecResult));
+}
 
 void main() {
     int outputResultLen;
-    BaseOperation::RecResult* outputResult = new BaseOperation::RecResult[4];
-    BaseOperation::Yolov5TRTContext* trt = (BaseOperation::Yolov5TRTContext*)AIInit();
-    std::string imgpath = R"(D:\yolov8\ultralytics\data/catsdogs/test/Cat/85.jpg)";
-    cv::Mat imgdata = cv::imread(imgpath);
-    AIDetect(trt, imgdata, outputResultLen, outputResult);
+    std::vector<BaseOperation::RecResult> outputResult;
+    std::string modelpathstr = R"(D:\C#\xumeng34\Glide4NetDemo\Glide4NetDemo\bin\Debug\weight\Split\object\Split_240305_144448/best.engine)";
+    const char* modelpath = modelpathstr.c_str();
+    std::string modelmodestr = "obj";
+    const char* modelmode = modelmodestr.c_str();
+    BaseOperation::Yolov5TRTContext* trt = (BaseOperation::Yolov5TRTContext*)AiGPUInit(modelpath, modelmode);
+    std::string imgpath = R"(D:\yolov8\ultralytics\data/catsdogs/val/Cat/85.jpg)";
+    //cv::Mat imgdata = cv::imread(imgpath);
+    //std::cout << nvinfer1::kNV_TENSORRT_VERSION_IMPL << std::endl;
+    //AIDetect(trt, imgdata, imgpath, outputResult);
+    imgpath = R"(D:\C#\xumeng34\Glide4NetDemo\Glide4NetDemo\bin\Debug\Split\object\Split_240305_144448\test\images)";
+    BaseOperation::RecResult* result; 
+    int outlen = 0;
+    const char* p = imgpath.c_str();
+    AiGPUDetectPath(trt, p, result, outlen);
 }

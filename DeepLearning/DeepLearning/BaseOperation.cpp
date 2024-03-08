@@ -157,12 +157,12 @@ float BaseOperation::iou(float lbox[4], float rbox[4]) {
     return interBoxS / (lbox[2] * lbox[3] + rbox[2] * rbox[3] - interBoxS);
 }
 
-void BaseOperation::ObjPostprocess(std::vector<Object>& res, float* prob, float conf_thresh, float nms_thresh, int yolomode) {
+void BaseOperation::ObjPostprocess(std::vector<Object>& res, float* prob, int num_box, float conf_thresh, float nms_thresh, int yolomode) {
     
     int numbox = -1,boxscore=0;
     float* output;
     if (yolomode == 1) {
-        numbox = 8400;
+        numbox = num_box;
         boxscore = 4;
         cv::Mat outputtrans = cv::Mat(NUM_CLASSES + 4, numbox, CV_32F, prob).t();
         output = outputtrans.ptr<float>();
