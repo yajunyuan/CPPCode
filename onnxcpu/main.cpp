@@ -7,11 +7,22 @@
 #include <math.h>
 #include <future>
 #include <thread>
+#include<direct.h> 
 #pragma warning(disable:4996)
 // 命名空间
 using namespace std;
 using namespace cv;
 using namespace Ort;
+
+struct RecResult {
+	char imgname[100];
+	int reallabel;
+	int id;             //结果类别id
+	double confidence;   //结果置信度
+	int box[4];       //矩形框
+	int bytesize;
+	//BYTE* boxMask;
+};
 
 // 自定义配置结构
 struct Configuration
@@ -21,6 +32,7 @@ public:
 	float nmsThreshold;  // Non-maximum suppression threshold
 	float objThreshold;  //Object Confidence threshold
 	string modelpath;
+	string modelmode;
 };
 
 // 定义BoxInfo结构类型
@@ -49,7 +61,7 @@ class YOLO
 {
 public:
 	YOLO(Configuration config);
-	void detect(Mat& frame);
+	void detect(Mat& frame, string imgname, std::vector<RecResult>& output);
 private:
 	float confThreshold;
 	float nmsThreshold;
@@ -88,13 +100,13 @@ YOLO::YOLO(Configuration config)
 	this->confThreshold = config.confThreshold;
 	this->nmsThreshold = config.nmsThreshold;
 	this->objThreshold = config.objThreshold;
-	char engine_filepath[1000] = { 0 };
-	char enginemode[100] = { 0 };
-	GetConfigValue("engine_file_path", engine_filepath);
-	GetConfigValue("engine_mode", enginemode);
-	engine_filepath[strlen(engine_filepath) - 1] = 0;
-	recmode = enginemode;
-	string model_pathtmp = engine_filepath;
+	//char engine_filepath[1000] = { 0 };
+	//char enginemode[100] = { 0 };
+	//GetConfigValue("engine_file_path", engine_filepath);
+	//GetConfigValue("engine_mode", enginemode);
+	//engine_filepath[strlen(engine_filepath) - 1] = 0;
+	recmode = config.modelmode;
+	string model_pathtmp = config.modelpath;
 	//std::wstring widestr = std::wstring(model_path.begin(), model_path.end());  //用于UTF-16编码的字符
 
 	////gpu, https://blog.csdn.net/weixin_44684139/article/details/123504222
@@ -363,8 +375,9 @@ vector<float> softmax(vector<float> input)
 	}
 	return result;
 }
+string labelstr[2] = { {"cat"},{"dog"} };
 
-void YOLO::detect(Mat& frame)
+void YOLO::detect(Mat& frame, string imgname, std::vector<RecResult>& output)
 {
 	int newh = 0, neww = 0, padh = 0, padw = 0;
 	Mat dstimg = this->resize_image(frame, &newh, &neww, &padh, &padw, recmode);
@@ -393,6 +406,13 @@ void YOLO::detect(Mat& frame)
 		else {
 			vecprob = vecprobtmp;
 		}
+		RecResult result;
+		result.id = arg_max(vecprob);
+		result.confidence = vecprob[arg_max(vecprob)];
+		strcpy(result.imgname, imgname.c_str());
+		output.push_back(result);
+		string label = format("label: %s score: %.2f", labelstr[result.id],result.confidence);
+		putText(frame, label, Point(10, 30), FONT_HERSHEY_COMPLEX, 1, Scalar(0, 0, 255));
 		std::cout << "label: " << arg_max(vecprob)<<"   score: " <<vecprob[arg_max(vecprob)] << std::endl;
 	}
 	if (recmode == "obj") {
@@ -450,6 +470,15 @@ void YOLO::detect(Mat& frame)
 		{
 			int xmin = int(generate_boxes[i].x1);
 			int ymin = int(generate_boxes[i].y1);
+			RecResult result;
+			strcpy(result.imgname, imgname.c_str());
+			result.id = generate_boxes[i].label;
+			result.confidence = generate_boxes[i].score;
+			result.box[0] = int(generate_boxes[i].x1);
+			result.box[1] = int(generate_boxes[i].y1);
+			result.box[2] = int(generate_boxes[i].x2 - generate_boxes[i].x1);
+			result.box[3] = int(generate_boxes[i].y2 - generate_boxes[i].y1);
+			output.push_back(result);
 			rectangle(frame, Point(xmin, ymin), Point(int(generate_boxes[i].x2), int(generate_boxes[i].y2)), Scalar(0, 0, 255), 2);
 			string label = format("%.2f", generate_boxes[i].score);
 			cout << (generate_boxes[i].x1 + generate_boxes[i].x2) / 2 / frame.cols << endl;
@@ -519,6 +548,15 @@ void YOLO::detect(Mat& frame)
 		{
 			int xmin = int(generate_boxes[i].x1);
 			int ymin = int(generate_boxes[i].y1);
+			RecResult result;
+			strcpy(result.imgname, imgname.c_str());
+			result.id = generate_boxes[i].label;
+			result.confidence = generate_boxes[i].score;
+			result.box[0] = int(generate_boxes[i].x1);
+			result.box[1] = int(generate_boxes[i].y1);
+			result.box[2] = int(generate_boxes[i].x2 - generate_boxes[i].x1);
+			result.box[3] = int(generate_boxes[i].y2 - generate_boxes[i].y1);
+			output.push_back(result);
 			rectangle(frame, Point(xmin, ymin), Point(int(generate_boxes[i].x2), int(generate_boxes[i].y2)), Scalar(0, 0, 255), 2);
 			string label = format("%.2f", generate_boxes[i].score);
 			cout << generate_boxes[i].x1 << endl;
@@ -534,20 +572,48 @@ void YOLO::detect(Mat& frame)
 
 extern "C"
 {
-	__declspec(dllexport) void* AiCPUInit();
+	__declspec(dllexport) void* AiCPUInit(const char* modelpath, const char* modelmode);
 	__declspec(dllexport) void AiCPUDetect(void* h, cv::Mat img);
 	__declspec(dllexport) void AiCPUDetectImg(void* h);
+	__declspec(dllexport) void AiCPUDetectPath(void* h, const char* imgpath, RecResult*& output, int& outlen);
 }
 
-void* AiCPUInit() {
-	Configuration yolo_nets = { 0.25, 0.5, 0.25 };
+void* AiCPUInit(const char* modelpath, const char* modelmode) {
+	string model_path, model_mode;
+	model_path = modelpath;
+	model_mode = modelmode;
+	Configuration yolo_nets = { 0.25, 0.5, 0.25,model_path,model_mode };
 	YOLO* yolo_modelptr = new YOLO(yolo_nets);
 	return (void*)yolo_modelptr;
 }
 
-void AiCPUDetect(void* h, cv::Mat img) {
+void AiCPUDetect(void* h, string image,cv::Mat img) {
 	YOLO* modelptr = (YOLO*)h;
-	modelptr->detect(img);
+	std::vector<RecResult> output;
+	modelptr->detect(img,image, output);
+}
+
+void AiCPUDetectPath(void* h, const char* imgpath, RecResult*& result, int& outlen) {
+	YOLO* modelptr = (YOLO*)h;
+	std::vector<cv::String> imgLists;
+	string path;
+	path = imgpath;
+	cv::glob(path, imgLists, true);
+	size_t pos = path.rfind("\\");
+	string temp = "./result/" + path.substr(pos+1);
+	//mkdir(temp.c_str());
+	std::vector<RecResult> output;
+	for (auto img : imgLists) {
+		std::cout << std::string(img) << std::endl;
+		cv::Mat srcimg = cv::imread(img);
+		string imgname = img.substr(path.size()+1);
+		modelptr->detect(srcimg,imgname,output);
+		pos = img.rfind("\\");
+		imwrite(temp+ img.substr(pos), srcimg);
+	}
+	outlen = output.size();
+	result = new RecResult[outlen];
+	memcpy(result, &output[0], outlen * sizeof(RecResult));
 }
 
 vector<string> split(string str, string sep)
@@ -615,7 +681,7 @@ void find_circle(void* init, string image)
 		Mat roiinput;
 		cvtColor(roi1, roiinput, COLOR_GRAY2BGR);
 		cout << "image: " << image <<"  第" << i+1<<"个区域："<< endl;
-		AiCPUDetect(init, roiinput);
+		AiCPUDetect(init, image, roiinput);
 		//imwrite(path + result1[0] + "-" + to_string(i) + ".jpg", roi1);
 
 		// 画出外接矩形
@@ -649,10 +715,19 @@ void AiCPUDetectImg(void* h) {
 int main(int argc, char* argv[])
 {
 	clock_t startTime, endTime; //计算时间
-	string img= R"(D:\test\good\BottomLeft1182817-0.jpg)";
+	string img= R"(D:\C#\xumeng31\Glide4NetDemo\Glide4NetDemo\bin\Debug\data\catsdogs\test)";
+	const char* p = img.c_str();
+	string modelpathstr = "D:\\c++\\onnxcpu\\model-2023-4/best.onnx";
+	const char* modelpath = modelpathstr.c_str();
+	string modelmodestr = "cls";
+	const char* modelmode = modelmodestr.c_str();
+	RecResult* output;
+	int outlen = 0;
+	AiCPUDetectPath(AiCPUInit(modelpath,modelmode), p, output, outlen);
+
 	//cv::Mat srcimg = cv::imread(img);
 	//AiCPUDetect(AiCPUInit(), srcimg);
-	AiCPUDetectImg(AiCPUInit());
+	//AiCPUDetectImg(AiCPUInit());
 	//std::string imgDir = "D:\\test\\good\\";
 	//std::vector<cv::String> imgLists;
 	//cv::glob(imgDir, imgLists, false);
