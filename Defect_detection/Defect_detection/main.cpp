@@ -952,21 +952,21 @@ void CalAvgPixel(Mat brightImg, Mat darkImg, std::vector<Rect> rectVector, AvgPi
 	avgPixelData.darkavgpixel = ddata;
 	cout << "cal avgpixel over" <<endl;
 }
-void handle(char* imgpath, char* imgpath1, DefectData* &outputinfo, int& outputInfoLen,  AvgPixelData& avgPixelData) {
-	std::string input_ImagePath = imgpath;
-	std::string input_ImagePath1 = imgpath1;
-	Mat img1;
-	Mat darimg1;
-	ReadImgarray(input_ImagePath, img1);//; ("D://C#//xiaci_pinjie_1209.bmp")
-	ReadImgarray(input_ImagePath1, darimg1);
-//void handle(uchar* data, uchar* data1, int width, int height, int stride, DefectData*& outputinfo, int& outputInfoLen, AvgPixelData& avgPixelData){
-//	//c# 图像入口
-//	cv::Mat img01 = cv::Mat(cv::Size(width, height), CV_8UC3, data, stride);
+//void handle(char* imgpath, char* imgpath1, DefectData* &outputinfo, int& outputInfoLen,  AvgPixelData& avgPixelData) {
+//	std::string input_ImagePath = imgpath;
+//	std::string input_ImagePath1 = imgpath1;
 //	Mat img1;
-//	cvtColor(img01, img1, COLOR_BGR2GRAY);
-//	cv::Mat img2 = cv::Mat(cv::Size(width, height), CV_8UC3, data1, stride);
 //	Mat darimg1;
-//	cvtColor(img2, darimg1, COLOR_BGR2GRAY);
+//	ReadImgarray(input_ImagePath, img1);//; ("D://C#//xiaci_pinjie_1209.bmp")
+//	ReadImgarray(input_ImagePath1, darimg1);
+void handle(uchar* data, uchar* data1, int width, int height, int stride, DefectData*& outputinfo, int& outputInfoLen, AvgPixelData& avgPixelData){
+	//c# 图像入口
+	cv::Mat img01 = cv::Mat(cv::Size(width, height), CV_8UC3, data, stride);
+	Mat img1;
+	cvtColor(img01, img1, COLOR_BGR2GRAY);
+	cv::Mat img2 = cv::Mat(cv::Size(width, height), CV_8UC3, data1, stride);
+	Mat darimg1;
+	cvtColor(img2, darimg1, COLOR_BGR2GRAY);
 	auto start = std::chrono::system_clock::now();
 	auto starttmp = std::chrono::system_clock::now();
 
@@ -1067,8 +1067,8 @@ void main()
 	int outputInfoLen = -1;
 	DefectData* outputinfo;
 	AvgPixelData outputpixeldata;
-	for (auto i = 0; i < 2; i++) {
-		handle(imgpath, imgpath1, outputinfo, outputInfoLen, outputpixeldata);
-	}
+	//for (auto i = 0; i < 2; i++) {
+	//	handle(imgpath, imgpath1, outputinfo, outputInfoLen, outputpixeldata);
+	//}
 	//release(outputinfo);
 }
