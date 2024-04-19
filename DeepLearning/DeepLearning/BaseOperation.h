@@ -73,7 +73,8 @@ public:
         int id;             //结果类别id
         double confidence;   //结果置信度
         int box[4];       //矩形框
-        int bytesize;
+        double radian;
+        uchar* boxMask;
     };
 
     struct Object
@@ -82,6 +83,9 @@ public:
         float bbox[4];
         float prob;
         float label;
+        float radian;
+        std::vector<float> picked_proposals;
+        uchar* boxMask;
     };
 
 
@@ -99,9 +103,13 @@ public:
 
     float iou(float lbox[4], float rbox[4]);
 
-    void ObjPostprocess(std::vector<Object>& res, float* output, int num_box, float conf_thresh, float nms_thresh, int yolomode);
+    void Radian(cv::Mat img, const Object& input_box);
 
-    void SegPostprocess(std::vector<Object>& res, float* prob, const std::vector<int>& imgSize, const std::vector<int>& padsize,
+    void ObjPostprocess(std::string engine_mode, std::vector<Object>& res, float* output, int num_box, float conf_thresh, float nms_thresh, int yolomode);
+
+    float SigmoidFunction(float a);
+
+    void SegPostprocess(std::vector<Object>& res, float* prob, float* prob1, cv::Mat img, const std::vector<int>& padsize,
         const std::vector<int>& segMaskParam, int yolomode);
 };
 
