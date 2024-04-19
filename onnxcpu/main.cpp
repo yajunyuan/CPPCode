@@ -14,14 +14,15 @@ using namespace std;
 using namespace cv;
 using namespace Ort;
 
+#define MASK_THRESHOLD 0.5;
 struct RecResult {
 	char imgname[100];
 	int reallabel;
 	int id;             //结果类别id
 	double confidence;   //结果置信度
 	int box[4];       //矩形框
-	int bytesize;
-	//BYTE* boxMask;
+	double radian;
+	uchar* boxMask;
 };
 
 // 自定义配置结构
@@ -44,6 +45,8 @@ typedef struct BoxInfo
 	float y2;
 	float score;
 	int label;
+	float radian;
+	std::vector<float> picked_proposals;
 } BoxInfo;
 
 // int endsWith(string s, string sub) {
@@ -82,6 +85,7 @@ private:
 	void GetConfigValue(const char* keyName, char* keyValue);
 	void normalize_(Mat img, int channels);		// 归一化函数
 	void nms(vector<BoxInfo>& input_boxes);
+	void Radian(Mat& frame, const BoxInfo& input_box);
 	Mat resize_image(Mat srcimg, int* newh, int* neww, int* top, int* left, string recmode);
 
 	
@@ -175,9 +179,14 @@ YOLO::YOLO(Configuration config)
 	if (recmode == "cls") {
 		num_classes = outdims[1];
 	}
-	else if (recmode == "obj") {
+	else if (recmode == "obj" || recmode == "obb") {
 		if (yolomode == 1) {
-			num_classes = outdims[1]-4;
+			if (recmode == "obj") {
+				num_classes = outdims[1] - 4;
+			}
+			else {
+				num_classes = outdims[1] - 5;
+			}
 		}
 		else {
 			num_classes = outdims[2] - 5;
@@ -377,6 +386,31 @@ vector<float> softmax(vector<float> input)
 }
 string labelstr[2] = { {"cat"},{"dog"} };
 
+void YOLO::Radian(Mat& frame, const BoxInfo& input_box) {
+	vector<Point> pts;
+	int width = int(input_box.x2 - input_box.x1);
+	int height = int(input_box.y2 - input_box.y1);
+	int center_x = int(input_box.x1 + (input_box.x2 - input_box.x1) / 2);
+	int center_y = int(input_box.y1 + (input_box.y2 - input_box.y1) / 2);
+	float cos_value = cos(input_box.radian);
+	float sin_value = sin(input_box.radian);
+	float vec1[2] = { width / 2 * cos_value, width / 2 * sin_value };
+	float vec2[2] = { -height / 2 * sin_value, height / 2 * cos_value };
+	pts.push_back(Point(int(center_x + vec1[0] + vec2[0]), int(center_y + vec1[1] + vec2[1])));
+	pts.push_back(Point(int(center_x + vec1[0] - vec2[0]), int(center_y + vec1[1] - vec2[1])));
+	pts.push_back(Point(int(center_x - vec1[0] - vec2[0]), int(center_y - vec1[1] - vec2[1])));
+	pts.push_back(Point(int(center_x - vec1[0] + vec2[0]), int(center_y - vec1[1] + vec2[1])));
+	cv::polylines(frame, pts, true, Scalar(0, 255, 0), 2, LINE_4);
+	string label = format("%.2f", input_box.score);
+	putText(frame, label, Point(pts[0].x-5, pts[0].y - 5), FONT_HERSHEY_SIMPLEX, 0.75, Scalar(0, 255, 0), 1);
+}
+
+float sigmoid_function(float a)
+{
+	float b = 1. / (1. + exp(-a));
+	return b;
+}
+
 void YOLO::detect(Mat& frame, string imgname, std::vector<RecResult>& output)
 {
 	int newh = 0, neww = 0, padh = 0, padw = 0;
@@ -415,16 +449,22 @@ void YOLO::detect(Mat& frame, string imgname, std::vector<RecResult>& output)
 		putText(frame, label, Point(10, 30), FONT_HERSHEY_COMPLEX, 1, Scalar(0, 0, 255));
 		std::cout << "label: " << arg_max(vecprob)<<"   score: " <<vecprob[arg_max(vecprob)] << std::endl;
 	}
-	if (recmode == "obj") {
+	if (recmode == "obj"|| recmode == "obb") {
 		int numbox = -1, boxscore = 0;
 		float* pdata;
 		if (yolomode == 1) {
 			numbox = num_proposal;
 			boxscore = 4;
-			cv::Mat outputtrans = cv::Mat(num_classes + 4, numbox, CV_32F, prob).t();
+			cv::Mat outputtrans;
+			if (recmode == "obj") {
+				outputtrans = cv::Mat(num_classes + 4, numbox, CV_32F, prob).t();
+			}
+			else {
+				outputtrans = cv::Mat(num_classes + 5, numbox, CV_32F, prob).t();  //obb xywh+numclasss+radian
+			}
 			pdata = outputtrans.ptr<float>();
 		}else {
-			numbox = 1000;
+			numbox = num_proposal;
 			boxscore = 5;
 			pdata = prob;
 		}
@@ -458,8 +498,13 @@ void YOLO::detect(Mat& frame, string imgname, std::vector<RecResult>& output)
 				float ymin = (cy - padh - 0.5 * h) * ratioh;
 				float xmax = (cx - padw + 0.5 * w) * ratiow;
 				float ymax = (cy - padh + 0.5 * h) * ratioh;
-
-				generate_boxes.push_back(BoxInfo{ xmin, ymin, xmax, ymax, max_class_socre, class_idx });
+				if (recmode == "obj") {
+					generate_boxes.push_back(BoxInfo{ xmin, ymin, xmax, ymax, max_class_socre, class_idx, -1.0});
+				}
+				else {
+					float radian = pdata[index + nout - 1];
+					generate_boxes.push_back(BoxInfo{ xmin, ymin, xmax, ymax, max_class_socre, class_idx, radian});
+				}
 			}
 		}
 
@@ -478,16 +523,22 @@ void YOLO::detect(Mat& frame, string imgname, std::vector<RecResult>& output)
 			result.box[1] = int(generate_boxes[i].y1);
 			result.box[2] = int(generate_boxes[i].x2 - generate_boxes[i].x1);
 			result.box[3] = int(generate_boxes[i].y2 - generate_boxes[i].y1);
+			if (recmode == "obj") {
+				rectangle(frame, Point(xmin, ymin), Point(int(generate_boxes[i].x2), int(generate_boxes[i].y2)), Scalar(0, 0, 255), 2);
+				string label = format("%.2f", generate_boxes[i].score);
+				cout << (generate_boxes[i].x1 + generate_boxes[i].x2) / 2 / frame.cols << endl;
+				cout << (generate_boxes[i].y1 + generate_boxes[i].y2) / 2 / frame.rows << endl;
+				cout << (generate_boxes[i].x2 - generate_boxes[i].x1) / frame.cols << endl;
+				cout << (generate_boxes[i].y2 - generate_boxes[i].y1) / frame.rows << endl;
+				cout << generate_boxes[i].label << endl;
+				cout << generate_boxes[i].score << endl;
+				putText(frame, label, Point(xmin, ymin - 5), FONT_HERSHEY_SIMPLEX, 0.75, Scalar(0, 255, 0), 1);
+			}
+			else {
+				result.radian = generate_boxes[i].radian;
+				Radian(frame, generate_boxes[i]);
+			}
 			output.push_back(result);
-			rectangle(frame, Point(xmin, ymin), Point(int(generate_boxes[i].x2), int(generate_boxes[i].y2)), Scalar(0, 0, 255), 2);
-			string label = format("%.2f", generate_boxes[i].score);
-			cout << (generate_boxes[i].x1 + generate_boxes[i].x2) / 2 / frame.cols << endl;
-			cout << (generate_boxes[i].y1 + generate_boxes[i].y2) / 2 / frame.rows << endl;
-			cout << (generate_boxes[i].x2 - generate_boxes[i].x1) / frame.cols << endl;
-			cout << (generate_boxes[i].y2 - generate_boxes[i].y1) / frame.rows << endl;
-			cout << generate_boxes[i].label << endl;
-			cout << generate_boxes[i].score << endl;
-			putText(frame, label, Point(xmin, ymin - 5), FONT_HERSHEY_SIMPLEX, 0.75, Scalar(0, 255, 0), 1);
 		}
 	}
 
@@ -495,17 +546,31 @@ void YOLO::detect(Mat& frame, string imgname, std::vector<RecResult>& output)
 		float* prob1 = ort_outputs[1].GetTensorMutableData<float>();
 		int numbox = -1, boxscore = 0;
 		float* pdata;
+		
 		if (yolomode == 1) {
 			numbox = num_proposal;
 			boxscore = 4;
-			cv::Mat outputtrans = cv::Mat(num_classes + 4 + segMaskChannel, numbox, CV_32F, prob).t();
-			pdata = outputtrans.ptr<float>();
+			cv::Mat outputtrans = cv::Mat(num_classes + 4 + segMaskChannel, num_proposal, CV_32FC1, prob).t();
+			//pdata = outputtrans.ptr<float>();
+			int img_length = outputtrans.total() * outputtrans.channels();
+			pdata = new float[img_length];
+			std::memcpy(pdata, outputtrans.ptr<float>(0), img_length * sizeof(float));
 		}
 		else {
-			numbox = 1000;
+			numbox = num_proposal;
 			boxscore = 5;
 			pdata = prob;
 		}
+		int net_width = num_classes + boxscore + segMaskChannel;
+
+		std::vector < cv::Scalar > color;
+		for (int i = 0; i < num_classes; i++) {
+			int b = rand() % 256;
+			int g = rand() % 256;
+			int r = rand() % 256;
+			color.push_back(cv::Scalar(b, g, r));
+		}
+		    
 		for (int i = 0; i < numbox; ++i) // 遍历所有的num_pre_boxes
 		{
 			int index = i * nout;      // prob[b*num_pred_boxes*(classes+5)]  
@@ -536,14 +601,17 @@ void YOLO::detect(Mat& frame, string imgname, std::vector<RecResult>& output)
 				float ymin = MAX((cy - padh - 0.5 * h) * ratioh,0);
 				float xmax = (cx - padw + 0.5 * w) * ratiow;
 				float ymax = (cy - padh + 0.5 * h) * ratioh;
+				std::vector<float> temp_proto(pdata+ index+ nout- mask_num, pdata+ index+nout);
 
-				generate_boxes.push_back(BoxInfo{ xmin, ymin, xmax, ymax, max_class_socre, class_idx });
+				generate_boxes.push_back(BoxInfo{ xmin, ymin, xmax, ymax, max_class_socre, class_idx, 0,temp_proto});
 			}
 		}
 
 		// Perform non maximum suppression to eliminate redundant overlapping boxes with
 		// lower confidences
 		nms(generate_boxes);
+
+		cv::Mat mask1(segMaskChannel, segMaskWidth* segMaskHeight, CV_32F, prob1);
 		for (size_t i = 0; i < generate_boxes.size(); ++i)
 		{
 			int xmin = int(generate_boxes[i].x1);
@@ -556,8 +624,38 @@ void YOLO::detect(Mat& frame, string imgname, std::vector<RecResult>& output)
 			result.box[1] = int(generate_boxes[i].y1);
 			result.box[2] = int(generate_boxes[i].x2 - generate_boxes[i].x1);
 			result.box[3] = int(generate_boxes[i].y2 - generate_boxes[i].y1);
+
+			Mat mask_protos = Mat(generate_boxes[i].picked_proposals).reshape(1,1);
+			cv::Mat m = mask_protos * mask1;
+			for (int col = 0; col < m.cols; col++) {
+				m.at<float>(0, col) = sigmoid_function(m.at<float>(0, col));
+			}
+			cv::Mat m1 = m.reshape(1, segMaskHeight);
+			// 将mask roi映射到框大小内
+			//int mx1 = std::max(0, int((generate_boxes[i].x1 / ratiow + padw) * segMaskWidth / inpWidth));
+			//int mx2 = std::max(0, int((generate_boxes[i].x2 / ratiow + padw) * segMaskWidth / inpWidth));
+			//int my1 = std::max(0, int((generate_boxes[i].y1 / ratioh + padh) * segMaskHeight / inpHeight));
+			//int my2 = std::max(0, int((generate_boxes[i].y2 / ratioh + padh) * segMaskHeight / inpHeight));
+			//cv::Mat mask_roitmp = m1(cv::Range(my1, my2), cv::Range(mx1, mx2));
+			//resize(mask_roi, masktmp, Size(result.box[2], result.box[3]));
+			//masktmp = masktmp(cv::Rect(0, 0, output[i].box[2], output[i].box[3])) > MASK_THRESHOLD;
+			
+			// 将mask roi映射到inpWidth*inpHeight大小内
+			cv::Rect roi(int((float)padw / inpWidth * segMaskWidth), int((float)padh / inpHeight * segMaskHeight), int(segMaskWidth - padw / 2), int(segMaskHeight - padh / 2));
+			cv::Mat mask_roi = m1(roi);
+			Mat masktmp;
+			resize(mask_roi, masktmp, Size(frame.cols, frame.rows));
+			masktmp = masktmp(cv::Rect(result.box[0], result.box[1], result.box[2], result.box[3])) > MASK_THRESHOLD;
+			
+			uchar* pImg = new uchar[result.box[2] * result.box[3]];
+			memcpy(pImg, masktmp.data, result.box[2] * result.box[3]);
+			result.boxMask = pImg;
 			output.push_back(result);
+
+			cv::Mat mask = frame.clone();
+			mask(Rect(result.box[0], result.box[1], result.box[2], result.box[3])).setTo(color[result.id], masktmp);
 			rectangle(frame, Point(xmin, ymin), Point(int(generate_boxes[i].x2), int(generate_boxes[i].y2)), Scalar(0, 0, 255), 2);
+			addWeighted(frame, 0.5, mask, 0.5, 0, frame);
 			string label = format("%.2f", generate_boxes[i].score);
 			cout << generate_boxes[i].x1 << endl;
 			cout << generate_boxes[i].y1 << endl;
@@ -573,7 +671,6 @@ void YOLO::detect(Mat& frame, string imgname, std::vector<RecResult>& output)
 extern "C"
 {
 	__declspec(dllexport) void* AiCPUInit(const char* modelpath, const char* modelmode);
-	__declspec(dllexport) void AiCPUDetect(void* h, cv::Mat img);
 	__declspec(dllexport) void AiCPUDetectImg(void* h);
 	__declspec(dllexport) void AiCPUDetectPath(void* h, const char* imgpath, RecResult*& output, int& outlen);
 }
@@ -587,10 +684,10 @@ void* AiCPUInit(const char* modelpath, const char* modelmode) {
 	return (void*)yolo_modelptr;
 }
 
-void AiCPUDetect(void* h, string image,cv::Mat img) {
+void AiCPUDetect(void* h, string imagename,cv::Mat img) {
 	YOLO* modelptr = (YOLO*)h;
 	std::vector<RecResult> output;
-	modelptr->detect(img,image, output);
+	modelptr->detect(img, imagename, output);
 }
 
 void AiCPUDetectPath(void* h, const char* imgpath, RecResult*& result, int& outlen) {
@@ -715,15 +812,18 @@ void AiCPUDetectImg(void* h) {
 int main(int argc, char* argv[])
 {
 	clock_t startTime, endTime; //计算时间
-	string img= R"(D:\C#\xumeng31\Glide4NetDemo\Glide4NetDemo\bin\Debug\data\catsdogs\test)";
+	string img= R"(D:\yolov8\ultralytics\dota8\images\val\P1470__1024__3296___1648.jpg)";
 	const char* p = img.c_str();
-	string modelpathstr = "D:\\c++\\onnxcpu\\model-2023-4/best.onnx";
+	string modelpathstr = R"(D:\yolov8\ultralytics\runs\obb\train5\weights\best.onnx)";
 	const char* modelpath = modelpathstr.c_str();
-	string modelmodestr = "cls";
+	string modelmodestr = "obb";
 	const char* modelmode = modelmodestr.c_str();
 	RecResult* output;
 	int outlen = 0;
-	AiCPUDetectPath(AiCPUInit(modelpath,modelmode), p, output, outlen);
+	/*AiCPUDetectPath(AiCPUInit(modelpath,modelmode), p, output, outlen);*/
+
+	cv::Mat srcimg = cv::imread(img);
+	AiCPUDetect(AiCPUInit(modelpath, modelmode), "test",srcimg);
 
 	//cv::Mat srcimg = cv::imread(img);
 	//AiCPUDetect(AiCPUInit(), srcimg);
