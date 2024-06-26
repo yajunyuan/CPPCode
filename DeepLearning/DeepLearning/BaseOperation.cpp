@@ -246,6 +246,26 @@ void BaseOperation::ObjPostprocess(std::string engine_mode, std::vector<Object>&
     }
 }
 
+void BaseOperation::ObjUniqueprocess(std::vector<Object>& res, float nms_thresh)
+{
+    for (int i = 0; i < res.size(); i++) {
+        auto& item = res[i];
+        for (int n = i + 1; n < res.size(); ++n) {
+            if (iou(item.bbox, res[n].bbox) > nms_thresh) {
+                if (item.prob >= res[n].prob) {
+                    res.erase(res.begin() + n);
+                    --n;
+                }
+                else {
+                    res.erase(res.begin() + i);
+                    --i;
+                    break;
+                }
+            }
+        }
+    }
+}
+
 float BaseOperation::SigmoidFunction(float a)
 {
     float b = 1. / (1. + exp(-a));

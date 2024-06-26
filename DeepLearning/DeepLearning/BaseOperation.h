@@ -107,6 +107,8 @@ public:
 
     void ObjPostprocess(std::string engine_mode, std::vector<Object>& res, float* output, int num_box, float conf_thresh, float nms_thresh, int yolomode);
 
+    void ObjUniqueprocess(std::vector<Object>& res, float nms_thresh);
+
     float SigmoidFunction(float a);
 
     void SegPostprocess(std::vector<Object>& res, float* prob, float* prob1, cv::Mat img, const std::vector<int>& padsize,

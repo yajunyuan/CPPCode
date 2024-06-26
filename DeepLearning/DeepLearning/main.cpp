@@ -39,6 +39,10 @@ void* AiGPUInit(const char* engineFilePath, const char* engineMode)
         printf("Result = FAIL\n");
         return nullptr;
     }
+    int cudaRuntimeVersion;
+    cudaRuntimeGetVersion(&cudaRuntimeVersion);
+
+    std::cout << "CUDA Runtime Version: " << cudaRuntimeVersion << std::endl;
     //char engine_filepath[1000] = { 0 };
     //char enginemode[100] = { 0 };
     //char input_w[100] = { 0 };
@@ -73,6 +77,9 @@ void* AiGPUInit(const char* engineFilePath, const char* engineMode)
         trtModelStream = new char[size];
         assert(trtModelStream);
         file.read(trtModelStream, size);
+        for (size_t i = 0; i < size; ++i) {
+            trtModelStream[i] ^= 0x88; // 解密数据（异或）
+        }
         file.close();
         std::cout << "read engine ok" << std::endl;
     }
@@ -268,6 +275,7 @@ void AIGPUDetect(void* h, cv::Mat img, std::string imgname, std::vector<BaseOper
     if (trt->engine_mode == "obj" || trt->engine_mode == "obb") {
         std::vector<BaseOperation::Object> objects;
         baseOperation.ObjPostprocess(trt->engine_mode, objects, trt->prob, trt->num_box, BBOX_CONF_THRESH, NMS_THRESH, trt->yolomode);
+        baseOperation.ObjUniqueprocess(objects, NMS_THRESH);
         auto end = std::chrono::system_clock::now();
         std::cout << std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count() << "ms" << std::endl;
         //outputResultLen = objects.size();
@@ -346,8 +354,12 @@ void main() {
     int outputResultLen;
     std::vector<BaseOperation::RecResult> outputResult;
     std::string modelpathstr = R"(D:\yolov8\ultralytics\runs\obb\train5\weights\best.engine)";
+
+    modelpathstr = R"(D:\yolov8\ultralytics\weight\all\train23\weights\best.engine)";
+    //modelpathstr = R"(D:\data\yolov10\weight\all\train\weights\best.engine)";
+    modelpathstr = R"(D:\yolov8\ultralytics\weight\all\train23\weights\jsenginemodel1.jsmodel)";
     const char* modelpath = modelpathstr.c_str();
-    std::string modelmodestr = "obb";
+    std::string modelmodestr = "obj";
     const char* modelmode = modelmodestr.c_str();
     BaseOperation::Yolov5TRTContext* trt = (BaseOperation::Yolov5TRTContext*)AiGPUInit(modelpath, modelmode);
     std::string imgpath = R"(D:\yolov8\ultralytics\coco128-seg\images)";
@@ -355,6 +367,7 @@ void main() {
     //std::cout << nvinfer1::kNV_TENSORRT_VERSION_IMPL << std::endl;
     //AIGPUDetect(trt, imgdata, imgpath, outputResult);
     imgpath = R"(D:\yolov8\ultralytics\dota8\images\val)";
+    imgpath = R"(E:\dataset\pengda\all\testimage)";
     BaseOperation::RecResult* result; 
     int outlen = 0;
     const char* p = imgpath.c_str();
