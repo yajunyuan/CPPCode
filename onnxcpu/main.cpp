@@ -64,6 +64,7 @@ class YOLO
 {
 public:
 	YOLO(Configuration config);
+	void DeCryption(string decryfile);
 	void detect(Mat& frame, string imgname, std::vector<RecResult>& output);
 private:
 	float confThreshold;
@@ -99,6 +100,20 @@ private:
 	vector<vector<int64_t>> output_node_dims; // >=1 outputs ,int64_t C/C++标准
 };
 
+void YOLO::DeCryption(string decryfile) {
+	std::ifstream stream(decryfile, std::ios::ate | std::ios::binary);
+	std::streamsize fileSize = stream.tellg();
+	stream.seekg(0, std::ios::beg);
+
+	std::vector<char> fileData(fileSize);
+	stream.read(fileData.data(), fileSize);
+	std::vector<char> decryptedData = fileData;
+	for (size_t i = 0; i < fileData.size(); ++i) {
+		decryptedData[i] ^= 0x88; // 解密数据（异或）
+	}
+	ort_session = new Session(env, decryptedData.data(), decryptedData.size(), sessionOptions);
+}
+
 YOLO::YOLO(Configuration config)
 {
 	this->confThreshold = config.confThreshold;
@@ -112,19 +127,20 @@ YOLO::YOLO(Configuration config)
 	recmode = config.modelmode;
 	string model_pathtmp = config.modelpath;
 	//std::wstring widestr = std::wstring(model_path.begin(), model_path.end());  //用于UTF-16编码的字符
-
 	////gpu, https://blog.csdn.net/weixin_44684139/article/details/123504222
 	////CUDA加速开启
 	//OrtSessionOptionsAppendExecutionProvider_CUDA(sessionOptions, 0);
-
 	//sessionOptions.SetGraphOptimizationLevel(ORT_ENABLE_BASIC);  //设置图优化类型
 	//ort_session = new Session(env, widestr.c_str(), sessionOptions);  // 创建会话，把模型加载到内存中
 	//ort_session = new Session(env, (const ORTCHAR_T*)model_path.c_str(), sessionOptions); // 创建会话，把模型加载到内存中
-	env = Env(ORT_LOGGING_LEVEL_ERROR, "onnxtest"); // 初始化环境
-	wchar_t* model_path = new wchar_t[model_pathtmp.size()];
-	swprintf(model_path, 100, L"%S", model_pathtmp.c_str());
-	//const wchar_t* model_path = L"hole_cls.onnx";
-	ort_session = new Session(env, model_path, sessionOptions);
+	
+	//env = Env(ORT_LOGGING_LEVEL_ERROR, "onnxtest"); // 初始化环境
+	//wchar_t* model_path = new wchar_t[model_pathtmp.size()];
+	//swprintf(model_path, 100, L"%S", model_pathtmp.c_str());
+	////const wchar_t* model_path = L"hole_cls.onnx";
+	//ort_session = new Session(env, model_path, sessionOptions);
+
+	DeCryption(model_pathtmp);
 	size_t numInputNodes = ort_session->GetInputCount();  //输入输出节点数量                         
 	size_t numOutputNodes = ort_session->GetOutputCount();
 	AllocatorWithDefaultOptions allocator;   // 配置输入输出节点内存
@@ -163,7 +179,13 @@ YOLO::YOLO(Configuration config)
 		nout = outdims[0] * outdims[1];
 	}
 	else {
-		if (outdims[1] < outdims[2]) {
+		if (outdims[2] == 6) {
+			this->yolomode = 2;
+			this->nout = outdims[2];      // 4+prob+label
+			this->num_proposal = outdims[1];  // pre_box
+			cout << "the onnx is yolov10" << endl;
+		}
+		else if (outdims[1] < outdims[2]) {
 			this->yolomode = 1;
 			this->nout = outdims[1];      // 4+classes
 			this->num_proposal = outdims[2];  // pre_box
@@ -452,7 +474,11 @@ void YOLO::detect(Mat& frame, string imgname, std::vector<RecResult>& output)
 	if (recmode == "obj"|| recmode == "obb") {
 		int numbox = -1, boxscore = 0;
 		float* pdata;
-		if (yolomode == 1) {
+		if (yolomode == 2) {
+			numbox = num_proposal;
+			pdata = prob;
+		}
+		else if (yolomode == 1) {
 			numbox = num_proposal;
 			boxscore = 4;
 			cv::Mat outputtrans;
@@ -475,14 +501,20 @@ void YOLO::detect(Mat& frame, string imgname, std::vector<RecResult>& output)
 			if (yolomode == 0 && obj_conf < this->objThreshold) continue;
 			int class_idx = 0;
 			float max_class_socre = 0;
-			for (int k = 0; k < this->num_classes; ++k)
-			{
-				if (pdata[k + index + boxscore] > max_class_socre)
+			if (yolomode != 2) {
+				for (int k = 0; k < this->num_classes; ++k)
 				{
-					max_class_socre = pdata[k + index + boxscore];
-					class_idx = k;
+					if (pdata[k + index + boxscore] > max_class_socre)
+					{
+						max_class_socre = pdata[k + index + boxscore];
+						class_idx = k;
+					}
 				}
 			}
+			else {
+				max_class_socre = obj_conf;
+			}
+
 			if (yolomode == 0) {
 				max_class_socre *= obj_conf;   // 最大的类别分数*置信度
 			}
@@ -494,10 +526,21 @@ void YOLO::detect(Mat& frame, string imgname, std::vector<RecResult>& output)
 				float w = pdata[index + 2];  //w
 				float h = pdata[index + 3];  //h
 
-				float xmin = (cx - padw - 0.5 * w) * ratiow;
-				float ymin = (cy - padh - 0.5 * h) * ratioh;
-				float xmax = (cx - padw + 0.5 * w) * ratiow;
-				float ymax = (cy - padh + 0.5 * h) * ratioh;
+				float xmin, ymin, xmax, ymax;
+				if (yolomode != 2) {
+					xmin = MAX((cx - padw - 0.5 * w) * ratiow, 0);
+					ymin = MAX((cy - padh - 0.5 * h) * ratioh, 0);
+					xmax = (cx - padw + 0.5 * w) * ratiow;
+					ymax = (cy - padh + 0.5 * h) * ratioh;
+				}
+				else {
+					// yolov10 xmin ymin xmax ymax
+					xmin = MAX((cx - padw) * ratiow, 0);
+					ymin = MAX((cy - padh) * ratioh, 0);
+					xmax = (w - padw) * ratiow;
+					ymax = (h - padh) * ratioh;
+				}
+
 				if (recmode == "obj") {
 					generate_boxes.push_back(BoxInfo{ xmin, ymin, xmax, ymax, max_class_socre, class_idx, -1.0});
 				}
@@ -510,7 +553,9 @@ void YOLO::detect(Mat& frame, string imgname, std::vector<RecResult>& output)
 
 		// Perform non maximum suppression to eliminate redundant overlapping boxes with
 		// lower confidences
-		nms(generate_boxes);
+		if (yolomode != 2) {
+			nms(generate_boxes);
+		}
 		for (size_t i = 0; i < generate_boxes.size(); ++i)
 		{
 			int xmin = int(generate_boxes[i].x1);
@@ -813,10 +858,12 @@ int main(int argc, char* argv[])
 {
 	clock_t startTime, endTime; //计算时间
 	string img= R"(D:\yolov8\ultralytics\dota8\images\val\P1470__1024__3296___1648.jpg)";
+	img = R"(E:\dataset\pengda\all\testimage\20240518091212816.bmp)";
 	const char* p = img.c_str();
 	string modelpathstr = R"(D:\yolov8\ultralytics\runs\obb\train5\weights\best.onnx)";
+	modelpathstr = R"(D:\c++\EnDeCryption\Debug\jsonnxmodel.jsmodel)";
 	const char* modelpath = modelpathstr.c_str();
-	string modelmodestr = "obb";
+	string modelmodestr = "obj";
 	const char* modelmode = modelmodestr.c_str();
 	RecResult* output;
 	int outlen = 0;
