@@ -228,7 +228,7 @@ void* AiGPUInit(const char* engineFilePath, const char* engineMode, bool gpuflag
     trt->inputindex = inputIndex;
     trt->outputindex = outputIndex;
     // Create GPU buffers on device
-    CHECK(cudaMalloc(&buffers[inputIndex], 2*3 * baseOperation.INPUT_H * baseOperation.INPUT_W * sizeof(float)));
+    CHECK(cudaMalloc(&buffers[inputIndex], 3 * baseOperation.INPUT_H * baseOperation.INPUT_W * sizeof(float)));
     CHECK(cudaMalloc(&buffers[outputIndex], trt->output_size * sizeof(float)));
     if (engine_mode == "seg") {
         Dims out1Dims;
@@ -263,7 +263,7 @@ void* AiGPUInit(const char* engineFilePath, const char* engineMode, bool gpuflag
     }
     trt->buffers = buffers;
     // 处理第一次推理时间长
-    float* blob = new float[baseOperation.INPUT_W * baseOperation.INPUT_H * 3*2];
+    float* blob = new float[baseOperation.INPUT_W * baseOperation.INPUT_H * 3];
     baseOperation.doInference(*trt->context, trt->stream, *(trt->engine), trt->engine_mode, trt->buffers, blob, trt->prob, trt->output_size, trt->prob1, trt->output1_size, trt);
     delete[] blob;
     //for (int i = 0; i < 6; i++) {
