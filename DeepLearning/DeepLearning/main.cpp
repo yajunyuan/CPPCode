@@ -1,15 +1,20 @@
 #include "logging.h"
 #include <chrono>
 #include "BaseOperation.h"
+#include <thread>
+#include <atomic>
+
+#include<windows.h>
 using namespace nvinfer1;
 static Logger gLogger;
 BaseOperation baseOperation;
-
+std::atomic<bool> isRunning{ true };
 extern "C"
 {
-    __declspec(dllexport) void* AiGPUInit(const char* modelpath, const char* modelmode);
+    __declspec(dllexport) void* AiGPUInit(const char* modelpath, const char* modelmode, bool gpuflag = false);
     __declspec(dllexport) void AIGPUDetectImg(void* h, uchar* data, int width, int height, int stride, BaseOperation::RecResult*& result, int& outlen);
     __declspec(dllexport) void AiGPUDetectPath(void* h, const char* imgpath, BaseOperation::RecResult*& output, int& outlen);
+    __declspec(dllexport) void ReleaseStruct(BaseOperation::RecResult* structArray);
 }
 
 void ResizeBox(int imgcols, int imgrows,const std::vector<int>& padsize, float bbox[]) {
@@ -28,7 +33,30 @@ void ResizeBox(int imgcols, int imgrows,const std::vector<int>& padsize, float b
     bbox[3] = h;
 }
 
-void* AiGPUInit(const char* engineFilePath, const char* engineMode)
+void threadFunction(BaseOperation::Yolov5TRTContext* trt) {
+    //std::string modelpathstr = R"(C:\Users\rs\Desktop\best.engine)";
+    //const char* modelpath = modelpathstr.c_str();
+    //std::string modelmodestr = "obj";
+    //const char* modelmode = modelmodestr.c_str();
+    //BaseOperation::Yolov5TRTContext* trt = (BaseOperation::Yolov5TRTContext*)AiGPUInit(modelpath, modelmode);
+    //std::string imgpath = R"(E:\dataset\pengda\all\test1)";
+    //const char* p = imgpath.c_str();
+    //BaseOperation::RecResult* result;
+    //int outlen = 0;
+    float* blob = new float[baseOperation.INPUT_W * baseOperation.INPUT_H * 3];
+    while (isRunning) {
+        Sleep(5);
+        //AiGPUDetectPath(trt, p, result, outlen);
+        //cv::Mat img= cv::Mat::zeros(2500, 2500, CV_8UC3);
+        //std::vector<BaseOperation::RecResult> output;
+        //AIGPUDetect(trt, img, "test", output);
+        baseOperation.doInference(*trt->context, trt->stream, *(trt->engine), trt->engine_mode, trt->buffers, blob, trt->prob, trt->output_size, trt->prob1, trt->output1_size, trt);
+    }
+    delete[] blob;
+    std::cout << "Thread is exiting..." << std::endl;
+}
+
+void* AiGPUInit(const char* engineFilePath, const char* engineMode, bool gpuflag)
 {
     //detect init
     int dev_num = 0;
@@ -77,9 +105,9 @@ void* AiGPUInit(const char* engineFilePath, const char* engineMode)
         trtModelStream = new char[size];
         assert(trtModelStream);
         file.read(trtModelStream, size);
-        for (size_t i = 0; i < size; ++i) {
-            trtModelStream[i] ^= 0x88; // 解密数据（异或）
-        }
+        //for (size_t i = 0; i < size; ++i) {
+        //    trtModelStream[i] ^= 0x88; // 解密数据（异或）
+        //}
         file.close();
         std::cout << "read engine ok" << std::endl;
     }
@@ -106,17 +134,19 @@ void* AiGPUInit(const char* engineFilePath, const char* engineMode)
     buffers = new void* [bindingnum];
     //assert(trt->engine->getNbBindings() == 2);
     //void* buffers[2];
+    trt->context->setBindingDimensions(0, Dims4(1, 3, 640, 640));
     std::vector<Dims> inputDims;
     std::vector<Dims> outputDims;
     for (int i = 0; i < bindingnum; i++) {
         if (trt->engine->bindingIsInput(i)) {
-            inputDims.push_back(trt->engine->getBindingDimensions(i));
+            inputDims.push_back(trt->context->getBindingDimensions(i));
         }
         else {
-            outputDims.push_back(trt->engine->getBindingDimensions(i));
+            outputDims.push_back(trt->context->getBindingDimensions(i));
         }
     }
     Dims outDims;
+
     int outputIndex = 0;
     if (outputDims.size() > 1) {
         for (int i = 0; i < outputDims.size(); ++i)
@@ -144,14 +174,14 @@ void* AiGPUInit(const char* engineFilePath, const char* engineMode)
     assert(trt->engine->getBindingDataType(outputIndex) == nvinfer1::DataType::kFLOAT);
     int mBatchSize = trt->engine->getMaxBatchSize();
 
-    auto out_dims = trt->engine->getBindingDimensions(outputIndex);
+    auto out_dims = trt->context->getBindingDimensions(outputIndex);
     trt->output_size = 1;
     trt->engine_mode = engine_mode;
     cudaStream_t streams;
     cudaStreamCreate(&streams);
     trt->stream = streams;
-    baseOperation.INPUT_H = trt->engine->getBindingDimensions(inputIndex).d[2];
-    baseOperation.INPUT_W = trt->engine->getBindingDimensions(inputIndex).d[3];
+    baseOperation.INPUT_H = trt->context->getBindingDimensions(inputIndex).d[2];
+    baseOperation.INPUT_W = trt->context->getBindingDimensions(inputIndex).d[3];
     if (out_dims.nbDims>2) {
         if (out_dims.d[1] < out_dims.d[2]) {
             trt->yolomode = 1;
@@ -198,7 +228,7 @@ void* AiGPUInit(const char* engineFilePath, const char* engineMode)
     trt->inputindex = inputIndex;
     trt->outputindex = outputIndex;
     // Create GPU buffers on device
-    CHECK(cudaMalloc(&buffers[inputIndex], 3 * baseOperation.INPUT_H * baseOperation.INPUT_W * sizeof(float)));
+    CHECK(cudaMalloc(&buffers[inputIndex], 2*3 * baseOperation.INPUT_H * baseOperation.INPUT_W * sizeof(float)));
     CHECK(cudaMalloc(&buffers[outputIndex], trt->output_size * sizeof(float)));
     if (engine_mode == "seg") {
         Dims out1Dims;
@@ -233,7 +263,7 @@ void* AiGPUInit(const char* engineFilePath, const char* engineMode)
     }
     trt->buffers = buffers;
     // 处理第一次推理时间长
-    float* blob = new float[baseOperation.INPUT_W * baseOperation.INPUT_H * 3];
+    float* blob = new float[baseOperation.INPUT_W * baseOperation.INPUT_H * 3*2];
     baseOperation.doInference(*trt->context, trt->stream, *(trt->engine), trt->engine_mode, trt->buffers, blob, trt->prob, trt->output_size, trt->prob1, trt->output1_size, trt);
     delete[] blob;
     //for (int i = 0; i < 6; i++) {
@@ -241,6 +271,15 @@ void* AiGPUInit(const char* engineFilePath, const char* engineMode)
     //    doInference(*trt->context[i], trt->stream, *(trt->engine), trt->engine_mode, trt->buffers, blob, trt->prob, trt->output_size, trt->prob1, trt->output1_size, trt);
     //    delete[] blob;
     //}
+    if (gpuflag) {
+        isRunning = gpuflag;
+        BaseOperation::Yolov5TRTContext* copytrt = (BaseOperation::Yolov5TRTContext*)AiGPUInit(engineFilePath, engineMode, false);
+        std::thread myThread(threadFunction, copytrt);
+        if (myThread.joinable()) {
+            myThread.detach(); // 分离线程，释放相关资源 
+        }
+    }
+
     return (void*)trt;
 }
 
@@ -249,11 +288,12 @@ void AIGPUDetect(void* h, cv::Mat img, std::string imgname, std::vector<BaseOper
     //int img_w = img.cols;
     //int img_h = img.rows;
     std::vector<int> padsize;
+    auto start1 = std::chrono::system_clock::now();
     cv::Mat pr_img = baseOperation.static_resize(img, padsize, trt->engine_mode);
-    std::cout << "blob image" << std::endl;
-
     float* blob;
     blob = baseOperation.blobFromImage(pr_img, trt->engine_mode, 3);
+
+    std::cout << "preprocess: " << std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::system_clock::now() - start1).count() / 1000.0 << "ms" << std::endl;
     float scale = (std::min)(baseOperation.INPUT_W / (img.cols * 1.0), baseOperation.INPUT_H / (img.rows * 1.0));
     auto start = std::chrono::system_clock::now();
     baseOperation.doInference(*trt->context, trt->stream, *(trt->engine), trt->engine_mode, trt->buffers, blob, trt->prob, trt->output_size, trt->prob1, trt->output1_size, trt);
@@ -261,6 +301,7 @@ void AIGPUDetect(void* h, cv::Mat img, std::string imgname, std::vector<BaseOper
     auto end = std::chrono::system_clock::now();
     std::cout << "doInference: " << std::chrono::duration_cast<std::chrono::microseconds>(end - start).count() / 1000.0 << "ms" << std::endl;
     BaseOperation::RecResult resulttmp;
+    auto start2 = std::chrono::system_clock::now();
     strcpy(resulttmp.imgname, imgname.c_str());
     if (trt->engine_mode == "cls") {
         std::vector<float> vecprob(trt->prob, trt->prob + trt->output_size), vecprob1(vecprob);;
@@ -276,10 +317,7 @@ void AIGPUDetect(void* h, cv::Mat img, std::string imgname, std::vector<BaseOper
         std::vector<BaseOperation::Object> objects;
         baseOperation.ObjPostprocess(trt->engine_mode, objects, trt->prob, trt->num_box, BBOX_CONF_THRESH, NMS_THRESH, trt->yolomode);
         baseOperation.ObjUniqueprocess(objects, NMS_THRESH);
-        auto end = std::chrono::system_clock::now();
-        std::cout << std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count() << "ms" << std::endl;
-        //outputResultLen = objects.size();
-        //outputResult = new BaseOperation::RecResult[outputResultLen];
+        //for (auto objects : batchobjects) {
         for (int i = 0; i < objects.size(); i++)
         {
             ResizeBox(img.cols, img.rows, padsize, objects[i].bbox);
@@ -289,7 +327,7 @@ void AIGPUDetect(void* h, cv::Mat img, std::string imgname, std::vector<BaseOper
             resulttmp.id = objects[i].label;
             resulttmp.confidence = objects[i].prob;
             if (trt->engine_mode == "obj") {
-                cv::rectangle(img, cv::Point(resulttmp.box[0], resulttmp.box[1]), cv::Point(resulttmp.box[0] + resulttmp.box[2], resulttmp.box[1] + resulttmp.box[3]), cv::Scalar(0, 0, 255), 2);
+                //cv::rectangle(img, cv::Point(resulttmp.box[0], resulttmp.box[1]), cv::Point(resulttmp.box[0] + resulttmp.box[2], resulttmp.box[1] + resulttmp.box[3]), cv::Scalar(0, 0, 255), 2);
             }
             else {
                 resulttmp.radian = objects[i].radian;
@@ -298,11 +336,10 @@ void AIGPUDetect(void* h, cv::Mat img, std::string imgname, std::vector<BaseOper
             output.push_back(resulttmp);
             std::cout << resulttmp.id << " " << resulttmp.confidence << std::endl;
         }
-        
     }
     if (trt->engine_mode == "seg") {
         std::vector<int> imgSize = { img.cols, img.rows };
-        std::vector<int> segMaskParams = { trt->num_box, trt->_segChannels, trt->_segWidth, trt->_segHeight};
+        std::vector<int> segMaskParams = { trt->num_box, trt->_segChannels, trt->_segWidth, trt->_segHeight };
         std::vector<BaseOperation::Object> objects;
         baseOperation.SegPostprocess(objects, trt->prob, trt->prob1, img, padsize, segMaskParams, trt->yolomode);
         //outputResultLen = objects.size();
@@ -317,17 +354,18 @@ void AIGPUDetect(void* h, cv::Mat img, std::string imgname, std::vector<BaseOper
             resulttmp.boxMask = objects[i].boxMask;
             output.push_back(resulttmp);
             std::cout << resulttmp.box[0] << "  " << resulttmp.box[1] << "  " << resulttmp.box[2]
-                << "  " << resulttmp.box[3] << "  " << resulttmp.id<<"  " << resulttmp.confidence << std::endl;
+                << "  " << resulttmp.box[3] << "  " << resulttmp.id << "  " << resulttmp.confidence << std::endl;
             //temp_mask_proposals.push_back(picked_proposals[idx]);
         }
     }
+    std::cout << "postprocess: " << std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::system_clock::now() - start2).count() / 1000.0 << "ms" << std::endl;
     delete blob;
 }
 
 void AIGPUDetectImg(void* h, uchar* data, int width, int height, int stride, BaseOperation::RecResult*& result, int& outlen) {
-    cv::Mat img = cv::Mat(cv::Size(width, height), CV_8UC3, data, stride);
+    cv::Mat img = cv::Mat(cv::Size(width, height), CV_8UC3, data, stride).clone();
     std::vector<BaseOperation::RecResult> output;
-    AIGPUDetect(h, img, "img", output);
+    //AIGPUDetect(h, img, "img", output);
     outlen = output.size();
     result = new BaseOperation::RecResult[outlen];
     memcpy(result, &output[0], outlen * sizeof(BaseOperation::RecResult));
@@ -345,31 +383,53 @@ void AiGPUDetectPath(void* h, const char* imgpath, BaseOperation::RecResult*& re
         std::string imgname = img.substr(path.size() + 1);
         AIGPUDetect(h, srcimg, imgname, output);
     }
+    //cv::Mat srcimg, srcimg1;
+    //for (auto i = 0; i < imgLists.size(); i++) {
+    //    srcimg = cv::imread(imgLists[0]);
+    //    std::string imgname = imgLists[0].substr(path.size() + 1);
+    //    srcimg1 = cv::imread(imgLists[1]);
+    //    AIGPUDetect(h, srcimg, srcimg1,imgname, output);
+    //}
     outlen = output.size();
     result = new BaseOperation::RecResult[outlen];
     memcpy(result, &output[0], outlen * sizeof(BaseOperation::RecResult));
 }
 
+void ReleaseStruct(BaseOperation::RecResult* structArray) {
+    if (structArray) {
+        delete structArray;
+    }
+    if (isRunning) {
+        isRunning = false;
+    }
+
+}
+#include <thread>
 void main() {
     int outputResultLen;
     std::vector<BaseOperation::RecResult> outputResult;
     std::string modelpathstr = R"(D:\yolov8\ultralytics\runs\obb\train5\weights\best.engine)";
 
-    modelpathstr = R"(D:\yolov8\ultralytics\weight\all\train23\weights\best.engine)";
+    modelpathstr = R"(C:\Users\rs\Desktop\best.engine)";
     //modelpathstr = R"(D:\data\yolov10\weight\all\train\weights\best.engine)";
-    modelpathstr = R"(D:\yolov8\ultralytics\weight\all\train23\weights\jsenginemodel1.jsmodel)";
+    //modelpathstr = R"(D:\yolov8\ultralytics\weight\all\train23\weights\jsenginemodel1.jsmodel)";
     const char* modelpath = modelpathstr.c_str();
     std::string modelmodestr = "obj";
     const char* modelmode = modelmodestr.c_str();
-    BaseOperation::Yolov5TRTContext* trt = (BaseOperation::Yolov5TRTContext*)AiGPUInit(modelpath, modelmode);
+    BaseOperation::Yolov5TRTContext* trt = (BaseOperation::Yolov5TRTContext*)AiGPUInit(modelpath, modelmode,true);
     std::string imgpath = R"(D:\yolov8\ultralytics\coco128-seg\images)";
     //cv::Mat imgdata = cv::imread(imgpath);
     //std::cout << nvinfer1::kNV_TENSORRT_VERSION_IMPL << std::endl;
     //AIGPUDetect(trt, imgdata, imgpath, outputResult);
     imgpath = R"(D:\yolov8\ultralytics\dota8\images\val)";
-    imgpath = R"(E:\dataset\pengda\all\testimage)";
+    imgpath = R"(E:\dataset\pengda\all\test1)";
     BaseOperation::RecResult* result; 
     int outlen = 0;
     const char* p = imgpath.c_str();
-    AiGPUDetectPath(trt, p, result, outlen);
+    for (int i = 0; i < 20; i++) {
+        AiGPUDetectPath(trt, p, result, outlen);
+        Sleep(1000);
+    }
+    ReleaseStruct(result);
+    Sleep(5000);
 }

@@ -79,7 +79,7 @@ cv::Mat BaseOperation::static_resize(cv::Mat img, std::vector<int>& padsize, std
 }
 
 float* BaseOperation::blobFromImage(cv::Mat img, std::string engine_mode, int channels) {
-    std::cout << img.total() << std::endl;
+    //std::cout << img.total() << std::endl;
     float* blob = new float[img.total() * channels];
     //int channels = 3;
     int img_h = img.rows;
@@ -108,7 +108,6 @@ float* BaseOperation::blobFromImage(cv::Mat img, std::string engine_mode, int ch
             }
         }
     }
-
     //for (size_t c = 0; c < channels; c++)
     //{
     //    for (size_t h = 0; h < img_h; h++)
@@ -203,9 +202,14 @@ void BaseOperation::ObjPostprocess(std::string engine_mode, std::vector<Object>&
         mi = mi + 1;
     }
     int det_size = sizeof(Object) / sizeof(float);
+    //for (int batch = 0; batch < 2; batch++) {
+    //    output += batch * numbox * mi;
+     //   Batchres.push_back(res);
+    //std::vector<Object> res;
     std::map<float, std::vector<Object>> m;
+
     for (int i = 0; i < numbox; i++) {
-        if (yolomode == 0&&output[mi * i + 4] <= conf_thresh) continue;
+        if (yolomode == 0 && output[mi * i + 4] <= conf_thresh) continue;
         float tmp = 0.0;
         float labeltmp = -1;
         for (int j = 0; j < NUM_CLASSES; j++) {
@@ -244,26 +248,31 @@ void BaseOperation::ObjPostprocess(std::string engine_mode, std::vector<Object>&
             }
         }
     }
+        
+        
+    
 }
 
 void BaseOperation::ObjUniqueprocess(std::vector<Object>& res, float nms_thresh)
 {
-    for (int i = 0; i < res.size(); i++) {
-        auto& item = res[i];
-        for (int n = i + 1; n < res.size(); ++n) {
-            if (iou(item.bbox, res[n].bbox) > nms_thresh) {
-                if (item.prob >= res[n].prob) {
-                    res.erase(res.begin() + n);
-                    --n;
-                }
-                else {
-                    res.erase(res.begin() + i);
-                    --i;
-                    break;
+    //for (auto res : Batchres) {
+        for (int i = 0; i < res.size(); i++) {
+            auto& item = res[i];
+            for (int n = i + 1; n < res.size(); ++n) {
+                if (iou(item.bbox, res[n].bbox) > nms_thresh) {
+                    if (item.prob >= res[n].prob) {
+                        res.erase(res.begin() + n);
+                        --n;
+                    }
+                    else {
+                        res.erase(res.begin() + i);
+                        --i;
+                        break;
+                    }
                 }
             }
         }
-    }
+    
 }
 
 float BaseOperation::SigmoidFunction(float a)
