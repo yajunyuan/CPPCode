@@ -1,0 +1,4161 @@
+shape_range_info {
+  name: "batch_norm2d_5.b_0"
+  min_shape: 64
+  max_shape: 64
+  opt_shape: 64
+}
+shape_range_info {
+  name: "batch_norm2d_5.w_0"
+  min_shape: 64
+  max_shape: 64
+  opt_shape: 64
+}
+shape_range_info {
+  name: "batch_norm2d_5.w_1"
+  min_shape: 64
+  max_shape: 64
+  opt_shape: 64
+}
+shape_range_info {
+  name: "batch_norm2d_5.w_2"
+  min_shape: 64
+  max_shape: 64
+  opt_shape: 64
+}
+shape_range_info {
+  name: "batch_norm2d_6.b_0"
+  min_shape: 120
+  max_shape: 120
+  opt_shape: 120
+}
+shape_range_info {
+  name: "batch_norm2d_6.w_0"
+  min_shape: 120
+  max_shape: 120
+  opt_shape: 120
+}
+shape_range_info {
+  name: "batch_norm2d_6.w_1"
+  min_shape: 120
+  max_shape: 120
+  opt_shape: 120
+}
+shape_range_info {
+  name: "batch_norm2d_6.w_2"
+  min_shape: 120
+  max_shape: 120
+  opt_shape: 120
+}
+shape_range_info {
+  name: "batch_norm2d_7.b_0"
+  min_shape: 512
+  max_shape: 512
+  opt_shape: 512
+}
+shape_range_info {
+  name: "batch_norm2d_7.w_0"
+  min_shape: 512
+  max_shape: 512
+  opt_shape: 512
+}
+shape_range_info {
+  name: "batch_norm2d_7.w_1"
+  min_shape: 512
+  max_shape: 512
+  opt_shape: 512
+}
+shape_range_info {
+  name: "batch_norm2d_7.w_2"
+  min_shape: 512
+  max_shape: 512
+  opt_shape: 512
+}
+shape_range_info {
+  name: "batch_norm2d_8.b_0"
+  min_shape: 64
+  max_shape: 64
+  opt_shape: 64
+}
+shape_range_info {
+  name: "batch_norm2d_8.w_0"
+  min_shape: 64
+  max_shape: 64
+  opt_shape: 64
+}
+shape_range_info {
+  name: "batch_norm2d_8.w_1"
+  min_shape: 64
+  max_shape: 64
+  opt_shape: 64
+}
+shape_range_info {
+  name: "batch_norm2d_8.w_2"
+  min_shape: 64
+  max_shape: 64
+  opt_shape: 64
+}
+shape_range_info {
+  name: "batch_norm2d_9.b_0"
+  min_shape: 64
+  max_shape: 64
+  opt_shape: 64
+}
+shape_range_info {
+  name: "batch_norm2d_9.w_0"
+  min_shape: 64
+  max_shape: 64
+  opt_shape: 64
+}
+shape_range_info {
+  name: "batch_norm2d_9.w_1"
+  min_shape: 64
+  max_shape: 64
+  opt_shape: 64
+}
+shape_range_info {
+  name: "batch_norm2d_9.w_2"
+  min_shape: 64
+  max_shape: 64
+  opt_shape: 64
+}
+shape_range_info {
+  name: "batch_norm_27.b_0"
+  min_shape: 16
+  max_shape: 16
+  opt_shape: 16
+}
+shape_range_info {
+  name: "batch_norm_27.tmp_3"
+  min_shape: 4
+  min_shape: 16
+  min_shape: 24
+  min_shape: 160
+  max_shape: 6
+  max_shape: 16
+  max_shape: 24
+  max_shape: 160
+  opt_shape: 4
+  opt_shape: 16
+  opt_shape: 24
+  opt_shape: 160
+}
+shape_range_info {
+  name: "batch_norm_27.tmp_4"
+  min_shape: 4
+  min_shape: 16
+  min_shape: 24
+  min_shape: 160
+  max_shape: 6
+  max_shape: 16
+  max_shape: 24
+  max_shape: 160
+  opt_shape: 4
+  opt_shape: 16
+  opt_shape: 24
+  opt_shape: 160
+}
+shape_range_info {
+  name: "batch_norm_27.w_0"
+  min_shape: 16
+  max_shape: 16
+  opt_shape: 16
+}
+shape_range_info {
+  name: "batch_norm_27.w_1"
+  min_shape: 16
+  max_shape: 16
+  opt_shape: 16
+}
+shape_range_info {
+  name: "batch_norm_27.w_2"
+  min_shape: 16
+  max_shape: 16
+  opt_shape: 16
+}
+shape_range_info {
+  name: "batch_norm_28.b_0"
+  min_shape: 16
+  max_shape: 16
+  opt_shape: 16
+}
+shape_range_info {
+  name: "batch_norm_28.tmp_3"
+  min_shape: 4
+  min_shape: 16
+  min_shape: 24
+  min_shape: 160
+  max_shape: 6
+  max_shape: 16
+  max_shape: 24
+  max_shape: 160
+  opt_shape: 4
+  opt_shape: 16
+  opt_shape: 24
+  opt_shape: 160
+}
+shape_range_info {
+  name: "batch_norm_28.tmp_4"
+  min_shape: 4
+  min_shape: 16
+  min_shape: 24
+  min_shape: 160
+  max_shape: 6
+  max_shape: 16
+  max_shape: 24
+  max_shape: 160
+  opt_shape: 4
+  opt_shape: 16
+  opt_shape: 24
+  opt_shape: 160
+}
+shape_range_info {
+  name: "batch_norm_28.w_0"
+  min_shape: 16
+  max_shape: 16
+  opt_shape: 16
+}
+shape_range_info {
+  name: "batch_norm_28.w_1"
+  min_shape: 16
+  max_shape: 16
+  opt_shape: 16
+}
+shape_range_info {
+  name: "batch_norm_28.w_2"
+  min_shape: 16
+  max_shape: 16
+  opt_shape: 16
+}
+shape_range_info {
+  name: "batch_norm_29.b_0"
+  min_shape: 32
+  max_shape: 32
+  opt_shape: 32
+}
+shape_range_info {
+  name: "batch_norm_29.tmp_3"
+  min_shape: 4
+  min_shape: 32
+  min_shape: 24
+  min_shape: 160
+  max_shape: 6
+  max_shape: 32
+  max_shape: 24
+  max_shape: 160
+  opt_shape: 4
+  opt_shape: 32
+  opt_shape: 24
+  opt_shape: 160
+}
+shape_range_info {
+  name: "batch_norm_29.tmp_4"
+  min_shape: 4
+  min_shape: 32
+  min_shape: 24
+  min_shape: 160
+  max_shape: 6
+  max_shape: 32
+  max_shape: 24
+  max_shape: 160
+  opt_shape: 4
+  opt_shape: 32
+  opt_shape: 24
+  opt_shape: 160
+}
+shape_range_info {
+  name: "batch_norm_29.w_0"
+  min_shape: 32
+  max_shape: 32
+  opt_shape: 32
+}
+shape_range_info {
+  name: "batch_norm_29.w_1"
+  min_shape: 32
+  max_shape: 32
+  opt_shape: 32
+}
+shape_range_info {
+  name: "batch_norm_29.w_2"
+  min_shape: 32
+  max_shape: 32
+  opt_shape: 32
+}
+shape_range_info {
+  name: "batch_norm_30.b_0"
+  min_shape: 32
+  max_shape: 32
+  opt_shape: 32
+}
+shape_range_info {
+  name: "batch_norm_30.tmp_3"
+  min_shape: 4
+  min_shape: 32
+  min_shape: 24
+  min_shape: 160
+  max_shape: 6
+  max_shape: 32
+  max_shape: 24
+  max_shape: 160
+  opt_shape: 4
+  opt_shape: 32
+  opt_shape: 24
+  opt_shape: 160
+}
+shape_range_info {
+  name: "batch_norm_30.tmp_4"
+  min_shape: 4
+  min_shape: 32
+  min_shape: 24
+  min_shape: 160
+  max_shape: 6
+  max_shape: 32
+  max_shape: 24
+  max_shape: 160
+  opt_shape: 4
+  opt_shape: 32
+  opt_shape: 24
+  opt_shape: 160
+}
+shape_range_info {
+  name: "batch_norm_30.w_0"
+  min_shape: 32
+  max_shape: 32
+  opt_shape: 32
+}
+shape_range_info {
+  name: "batch_norm_30.w_1"
+  min_shape: 32
+  max_shape: 32
+  opt_shape: 32
+}
+shape_range_info {
+  name: "batch_norm_30.w_2"
+  min_shape: 32
+  max_shape: 32
+  opt_shape: 32
+}
+shape_range_info {
+  name: "batch_norm_31.b_0"
+  min_shape: 64
+  max_shape: 64
+  opt_shape: 64
+}
+shape_range_info {
+  name: "batch_norm_31.tmp_3"
+  min_shape: 4
+  min_shape: 64
+  min_shape: 24
+  min_shape: 160
+  max_shape: 6
+  max_shape: 64
+  max_shape: 24
+  max_shape: 160
+  opt_shape: 4
+  opt_shape: 64
+  opt_shape: 24
+  opt_shape: 160
+}
+shape_range_info {
+  name: "batch_norm_31.tmp_4"
+  min_shape: 4
+  min_shape: 64
+  min_shape: 24
+  min_shape: 160
+  max_shape: 6
+  max_shape: 64
+  max_shape: 24
+  max_shape: 160
+  opt_shape: 4
+  opt_shape: 64
+  opt_shape: 24
+  opt_shape: 160
+}
+shape_range_info {
+  name: "batch_norm_31.w_0"
+  min_shape: 64
+  max_shape: 64
+  opt_shape: 64
+}
+shape_range_info {
+  name: "batch_norm_31.w_1"
+  min_shape: 64
+  max_shape: 64
+  opt_shape: 64
+}
+shape_range_info {
+  name: "batch_norm_31.w_2"
+  min_shape: 64
+  max_shape: 64
+  opt_shape: 64
+}
+shape_range_info {
+  name: "batch_norm_32.b_0"
+  min_shape: 64
+  max_shape: 64
+  opt_shape: 64
+}
+shape_range_info {
+  name: "batch_norm_32.tmp_3"
+  min_shape: 4
+  min_shape: 64
+  min_shape: 24
+  min_shape: 160
+  max_shape: 6
+  max_shape: 64
+  max_shape: 24
+  max_shape: 160
+  opt_shape: 4
+  opt_shape: 64
+  opt_shape: 24
+  opt_shape: 160
+}
+shape_range_info {
+  name: "batch_norm_32.tmp_4"
+  min_shape: 4
+  min_shape: 64
+  min_shape: 24
+  min_shape: 160
+  max_shape: 6
+  max_shape: 64
+  max_shape: 24
+  max_shape: 160
+  opt_shape: 4
+  opt_shape: 64
+  opt_shape: 24
+  opt_shape: 160
+}
+shape_range_info {
+  name: "batch_norm_32.w_0"
+  min_shape: 64
+  max_shape: 64
+  opt_shape: 64
+}
+shape_range_info {
+  name: "batch_norm_32.w_1"
+  min_shape: 64
+  max_shape: 64
+  opt_shape: 64
+}
+shape_range_info {
+  name: "batch_norm_32.w_2"
+  min_shape: 64
+  max_shape: 64
+  opt_shape: 64
+}
+shape_range_info {
+  name: "batch_norm_33.b_0"
+  min_shape: 64
+  max_shape: 64
+  opt_shape: 64
+}
+shape_range_info {
+  name: "batch_norm_33.tmp_3"
+  min_shape: 4
+  min_shape: 64
+  min_shape: 24
+  min_shape: 160
+  max_shape: 6
+  max_shape: 64
+  max_shape: 24
+  max_shape: 160
+  opt_shape: 4
+  opt_shape: 64
+  opt_shape: 24
+  opt_shape: 160
+}
+shape_range_info {
+  name: "batch_norm_33.tmp_4"
+  min_shape: 4
+  min_shape: 64
+  min_shape: 24
+  min_shape: 160
+  max_shape: 6
+  max_shape: 64
+  max_shape: 24
+  max_shape: 160
+  opt_shape: 4
+  opt_shape: 64
+  opt_shape: 24
+  opt_shape: 160
+}
+shape_range_info {
+  name: "batch_norm_33.w_0"
+  min_shape: 64
+  max_shape: 64
+  opt_shape: 64
+}
+shape_range_info {
+  name: "batch_norm_33.w_1"
+  min_shape: 64
+  max_shape: 64
+  opt_shape: 64
+}
+shape_range_info {
+  name: "batch_norm_33.w_2"
+  min_shape: 64
+  max_shape: 64
+  opt_shape: 64
+}
+shape_range_info {
+  name: "batch_norm_34.b_0"
+  min_shape: 64
+  max_shape: 64
+  opt_shape: 64
+}
+shape_range_info {
+  name: "batch_norm_34.tmp_3"
+  min_shape: 4
+  min_shape: 64
+  min_shape: 12
+  min_shape: 160
+  max_shape: 6
+  max_shape: 64
+  max_shape: 12
+  max_shape: 160
+  opt_shape: 4
+  opt_shape: 64
+  opt_shape: 12
+  opt_shape: 160
+}
+shape_range_info {
+  name: "batch_norm_34.tmp_4"
+  min_shape: 4
+  min_shape: 64
+  min_shape: 12
+  min_shape: 160
+  max_shape: 6
+  max_shape: 64
+  max_shape: 12
+  max_shape: 160
+  opt_shape: 4
+  opt_shape: 64
+  opt_shape: 12
+  opt_shape: 160
+}
+shape_range_info {
+  name: "batch_norm_34.w_0"
+  min_shape: 64
+  max_shape: 64
+  opt_shape: 64
+}
+shape_range_info {
+  name: "batch_norm_34.w_1"
+  min_shape: 64
+  max_shape: 64
+  opt_shape: 64
+}
+shape_range_info {
+  name: "batch_norm_34.w_2"
+  min_shape: 64
+  max_shape: 64
+  opt_shape: 64
+}
+shape_range_info {
+  name: "batch_norm_35.b_0"
+  min_shape: 128
+  max_shape: 128
+  opt_shape: 128
+}
+shape_range_info {
+  name: "batch_norm_35.tmp_3"
+  min_shape: 4
+  min_shape: 128
+  min_shape: 12
+  min_shape: 160
+  max_shape: 6
+  max_shape: 128
+  max_shape: 12
+  max_shape: 160
+  opt_shape: 4
+  opt_shape: 128
+  opt_shape: 12
+  opt_shape: 160
+}
+shape_range_info {
+  name: "batch_norm_35.tmp_4"
+  min_shape: 4
+  min_shape: 128
+  min_shape: 12
+  min_shape: 160
+  max_shape: 6
+  max_shape: 128
+  max_shape: 12
+  max_shape: 160
+  opt_shape: 4
+  opt_shape: 128
+  opt_shape: 12
+  opt_shape: 160
+}
+shape_range_info {
+  name: "batch_norm_35.w_0"
+  min_shape: 128
+  max_shape: 128
+  opt_shape: 128
+}
+shape_range_info {
+  name: "batch_norm_35.w_1"
+  min_shape: 128
+  max_shape: 128
+  opt_shape: 128
+}
+shape_range_info {
+  name: "batch_norm_35.w_2"
+  min_shape: 128
+  max_shape: 128
+  opt_shape: 128
+}
+shape_range_info {
+  name: "batch_norm_36.b_0"
+  min_shape: 128
+  max_shape: 128
+  opt_shape: 128
+}
+shape_range_info {
+  name: "batch_norm_36.tmp_3"
+  min_shape: 4
+  min_shape: 128
+  min_shape: 12
+  min_shape: 160
+  max_shape: 6
+  max_shape: 128
+  max_shape: 12
+  max_shape: 160
+  opt_shape: 4
+  opt_shape: 128
+  opt_shape: 12
+  opt_shape: 160
+}
+shape_range_info {
+  name: "batch_norm_36.tmp_4"
+  min_shape: 4
+  min_shape: 128
+  min_shape: 12
+  min_shape: 160
+  max_shape: 6
+  max_shape: 128
+  max_shape: 12
+  max_shape: 160
+  opt_shape: 4
+  opt_shape: 128
+  opt_shape: 12
+  opt_shape: 160
+}
+shape_range_info {
+  name: "batch_norm_36.w_0"
+  min_shape: 128
+  max_shape: 128
+  opt_shape: 128
+}
+shape_range_info {
+  name: "batch_norm_36.w_1"
+  min_shape: 128
+  max_shape: 128
+  opt_shape: 128
+}
+shape_range_info {
+  name: "batch_norm_36.w_2"
+  min_shape: 128
+  max_shape: 128
+  opt_shape: 128
+}
+shape_range_info {
+  name: "batch_norm_37.b_0"
+  min_shape: 128
+  max_shape: 128
+  opt_shape: 128
+}
+shape_range_info {
+  name: "batch_norm_37.tmp_3"
+  min_shape: 4
+  min_shape: 128
+  min_shape: 12
+  min_shape: 160
+  max_shape: 6
+  max_shape: 128
+  max_shape: 12
+  max_shape: 160
+  opt_shape: 4
+  opt_shape: 128
+  opt_shape: 12
+  opt_shape: 160
+}
+shape_range_info {
+  name: "batch_norm_37.tmp_4"
+  min_shape: 4
+  min_shape: 128
+  min_shape: 12
+  min_shape: 160
+  max_shape: 6
+  max_shape: 128
+  max_shape: 12
+  max_shape: 160
+  opt_shape: 4
+  opt_shape: 128
+  opt_shape: 12
+  opt_shape: 160
+}
+shape_range_info {
+  name: "batch_norm_37.w_0"
+  min_shape: 128
+  max_shape: 128
+  opt_shape: 128
+}
+shape_range_info {
+  name: "batch_norm_37.w_1"
+  min_shape: 128
+  max_shape: 128
+  opt_shape: 128
+}
+shape_range_info {
+  name: "batch_norm_37.w_2"
+  min_shape: 128
+  max_shape: 128
+  opt_shape: 128
+}
+shape_range_info {
+  name: "batch_norm_38.b_0"
+  min_shape: 128
+  max_shape: 128
+  opt_shape: 128
+}
+shape_range_info {
+  name: "batch_norm_38.tmp_3"
+  min_shape: 4
+  min_shape: 128
+  min_shape: 6
+  min_shape: 160
+  max_shape: 6
+  max_shape: 128
+  max_shape: 6
+  max_shape: 160
+  opt_shape: 4
+  opt_shape: 128
+  opt_shape: 6
+  opt_shape: 160
+}
+shape_range_info {
+  name: "batch_norm_38.tmp_4"
+  min_shape: 4
+  min_shape: 128
+  min_shape: 6
+  min_shape: 160
+  max_shape: 6
+  max_shape: 128
+  max_shape: 6
+  max_shape: 160
+  opt_shape: 4
+  opt_shape: 128
+  opt_shape: 6
+  opt_shape: 160
+}
+shape_range_info {
+  name: "batch_norm_38.w_0"
+  min_shape: 128
+  max_shape: 128
+  opt_shape: 128
+}
+shape_range_info {
+  name: "batch_norm_38.w_1"
+  min_shape: 128
+  max_shape: 128
+  opt_shape: 128
+}
+shape_range_info {
+  name: "batch_norm_38.w_2"
+  min_shape: 128
+  max_shape: 128
+  opt_shape: 128
+}
+shape_range_info {
+  name: "batch_norm_39.b_0"
+  min_shape: 256
+  max_shape: 256
+  opt_shape: 256
+}
+shape_range_info {
+  name: "batch_norm_39.tmp_3"
+  min_shape: 4
+  min_shape: 256
+  min_shape: 6
+  min_shape: 160
+  max_shape: 6
+  max_shape: 256
+  max_shape: 6
+  max_shape: 160
+  opt_shape: 4
+  opt_shape: 256
+  opt_shape: 6
+  opt_shape: 160
+}
+shape_range_info {
+  name: "batch_norm_39.tmp_4"
+  min_shape: 4
+  min_shape: 256
+  min_shape: 6
+  min_shape: 160
+  max_shape: 6
+  max_shape: 256
+  max_shape: 6
+  max_shape: 160
+  opt_shape: 4
+  opt_shape: 256
+  opt_shape: 6
+  opt_shape: 160
+}
+shape_range_info {
+  name: "batch_norm_39.w_0"
+  min_shape: 256
+  max_shape: 256
+  opt_shape: 256
+}
+shape_range_info {
+  name: "batch_norm_39.w_1"
+  min_shape: 256
+  max_shape: 256
+  opt_shape: 256
+}
+shape_range_info {
+  name: "batch_norm_39.w_2"
+  min_shape: 256
+  max_shape: 256
+  opt_shape: 256
+}
+shape_range_info {
+  name: "batch_norm_40.b_0"
+  min_shape: 256
+  max_shape: 256
+  opt_shape: 256
+}
+shape_range_info {
+  name: "batch_norm_40.tmp_3"
+  min_shape: 4
+  min_shape: 256
+  min_shape: 6
+  min_shape: 160
+  max_shape: 6
+  max_shape: 256
+  max_shape: 6
+  max_shape: 160
+  opt_shape: 4
+  opt_shape: 256
+  opt_shape: 6
+  opt_shape: 160
+}
+shape_range_info {
+  name: "batch_norm_40.tmp_4"
+  min_shape: 4
+  min_shape: 256
+  min_shape: 6
+  min_shape: 160
+  max_shape: 6
+  max_shape: 256
+  max_shape: 6
+  max_shape: 160
+  opt_shape: 4
+  opt_shape: 256
+  opt_shape: 6
+  opt_shape: 160
+}
+shape_range_info {
+  name: "batch_norm_40.w_0"
+  min_shape: 256
+  max_shape: 256
+  opt_shape: 256
+}
+shape_range_info {
+  name: "batch_norm_40.w_1"
+  min_shape: 256
+  max_shape: 256
+  opt_shape: 256
+}
+shape_range_info {
+  name: "batch_norm_40.w_2"
+  min_shape: 256
+  max_shape: 256
+  opt_shape: 256
+}
+shape_range_info {
+  name: "batch_norm_41.b_0"
+  min_shape: 256
+  max_shape: 256
+  opt_shape: 256
+}
+shape_range_info {
+  name: "batch_norm_41.tmp_3"
+  min_shape: 4
+  min_shape: 256
+  min_shape: 6
+  min_shape: 160
+  max_shape: 6
+  max_shape: 256
+  max_shape: 6
+  max_shape: 160
+  opt_shape: 4
+  opt_shape: 256
+  opt_shape: 6
+  opt_shape: 160
+}
+shape_range_info {
+  name: "batch_norm_41.tmp_4"
+  min_shape: 4
+  min_shape: 256
+  min_shape: 6
+  min_shape: 160
+  max_shape: 6
+  max_shape: 256
+  max_shape: 6
+  max_shape: 160
+  opt_shape: 4
+  opt_shape: 256
+  opt_shape: 6
+  opt_shape: 160
+}
+shape_range_info {
+  name: "batch_norm_41.w_0"
+  min_shape: 256
+  max_shape: 256
+  opt_shape: 256
+}
+shape_range_info {
+  name: "batch_norm_41.w_1"
+  min_shape: 256
+  max_shape: 256
+  opt_shape: 256
+}
+shape_range_info {
+  name: "batch_norm_41.w_2"
+  min_shape: 256
+  max_shape: 256
+  opt_shape: 256
+}
+shape_range_info {
+  name: "batch_norm_42.b_0"
+  min_shape: 256
+  max_shape: 256
+  opt_shape: 256
+}
+shape_range_info {
+  name: "batch_norm_42.tmp_3"
+  min_shape: 4
+  min_shape: 256
+  min_shape: 6
+  min_shape: 160
+  max_shape: 6
+  max_shape: 256
+  max_shape: 6
+  max_shape: 160
+  opt_shape: 4
+  opt_shape: 256
+  opt_shape: 6
+  opt_shape: 160
+}
+shape_range_info {
+  name: "batch_norm_42.tmp_4"
+  min_shape: 4
+  min_shape: 256
+  min_shape: 6
+  min_shape: 160
+  max_shape: 6
+  max_shape: 256
+  max_shape: 6
+  max_shape: 160
+  opt_shape: 4
+  opt_shape: 256
+  opt_shape: 6
+  opt_shape: 160
+}
+shape_range_info {
+  name: "batch_norm_42.w_0"
+  min_shape: 256
+  max_shape: 256
+  opt_shape: 256
+}
+shape_range_info {
+  name: "batch_norm_42.w_1"
+  min_shape: 256
+  max_shape: 256
+  opt_shape: 256
+}
+shape_range_info {
+  name: "batch_norm_42.w_2"
+  min_shape: 256
+  max_shape: 256
+  opt_shape: 256
+}
+shape_range_info {
+  name: "batch_norm_43.b_0"
+  min_shape: 256
+  max_shape: 256
+  opt_shape: 256
+}
+shape_range_info {
+  name: "batch_norm_43.tmp_3"
+  min_shape: 4
+  min_shape: 256
+  min_shape: 6
+  min_shape: 160
+  max_shape: 6
+  max_shape: 256
+  max_shape: 6
+  max_shape: 160
+  opt_shape: 4
+  opt_shape: 256
+  opt_shape: 6
+  opt_shape: 160
+}
+shape_range_info {
+  name: "batch_norm_43.tmp_4"
+  min_shape: 4
+  min_shape: 256
+  min_shape: 6
+  min_shape: 160
+  max_shape: 6
+  max_shape: 256
+  max_shape: 6
+  max_shape: 160
+  opt_shape: 4
+  opt_shape: 256
+  opt_shape: 6
+  opt_shape: 160
+}
+shape_range_info {
+  name: "batch_norm_43.w_0"
+  min_shape: 256
+  max_shape: 256
+  opt_shape: 256
+}
+shape_range_info {
+  name: "batch_norm_43.w_1"
+  min_shape: 256
+  max_shape: 256
+  opt_shape: 256
+}
+shape_range_info {
+  name: "batch_norm_43.w_2"
+  min_shape: 256
+  max_shape: 256
+  opt_shape: 256
+}
+shape_range_info {
+  name: "batch_norm_44.b_0"
+  min_shape: 256
+  max_shape: 256
+  opt_shape: 256
+}
+shape_range_info {
+  name: "batch_norm_44.tmp_3"
+  min_shape: 4
+  min_shape: 256
+  min_shape: 6
+  min_shape: 160
+  max_shape: 6
+  max_shape: 256
+  max_shape: 6
+  max_shape: 160
+  opt_shape: 4
+  opt_shape: 256
+  opt_shape: 6
+  opt_shape: 160
+}
+shape_range_info {
+  name: "batch_norm_44.tmp_4"
+  min_shape: 4
+  min_shape: 256
+  min_shape: 6
+  min_shape: 160
+  max_shape: 6
+  max_shape: 256
+  max_shape: 6
+  max_shape: 160
+  opt_shape: 4
+  opt_shape: 256
+  opt_shape: 6
+  opt_shape: 160
+}
+shape_range_info {
+  name: "batch_norm_44.w_0"
+  min_shape: 256
+  max_shape: 256
+  opt_shape: 256
+}
+shape_range_info {
+  name: "batch_norm_44.w_1"
+  min_shape: 256
+  max_shape: 256
+  opt_shape: 256
+}
+shape_range_info {
+  name: "batch_norm_44.w_2"
+  min_shape: 256
+  max_shape: 256
+  opt_shape: 256
+}
+shape_range_info {
+  name: "batch_norm_45.b_0"
+  min_shape: 256
+  max_shape: 256
+  opt_shape: 256
+}
+shape_range_info {
+  name: "batch_norm_45.tmp_3"
+  min_shape: 4
+  min_shape: 256
+  min_shape: 6
+  min_shape: 160
+  max_shape: 6
+  max_shape: 256
+  max_shape: 6
+  max_shape: 160
+  opt_shape: 4
+  opt_shape: 256
+  opt_shape: 6
+  opt_shape: 160
+}
+shape_range_info {
+  name: "batch_norm_45.tmp_4"
+  min_shape: 4
+  min_shape: 256
+  min_shape: 6
+  min_shape: 160
+  max_shape: 6
+  max_shape: 256
+  max_shape: 6
+  max_shape: 160
+  opt_shape: 4
+  opt_shape: 256
+  opt_shape: 6
+  opt_shape: 160
+}
+shape_range_info {
+  name: "batch_norm_45.w_0"
+  min_shape: 256
+  max_shape: 256
+  opt_shape: 256
+}
+shape_range_info {
+  name: "batch_norm_45.w_1"
+  min_shape: 256
+  max_shape: 256
+  opt_shape: 256
+}
+shape_range_info {
+  name: "batch_norm_45.w_2"
+  min_shape: 256
+  max_shape: 256
+  opt_shape: 256
+}
+shape_range_info {
+  name: "batch_norm_46.b_0"
+  min_shape: 256
+  max_shape: 256
+  opt_shape: 256
+}
+shape_range_info {
+  name: "batch_norm_46.tmp_3"
+  min_shape: 4
+  min_shape: 256
+  min_shape: 6
+  min_shape: 160
+  max_shape: 6
+  max_shape: 256
+  max_shape: 6
+  max_shape: 160
+  opt_shape: 4
+  opt_shape: 256
+  opt_shape: 6
+  opt_shape: 160
+}
+shape_range_info {
+  name: "batch_norm_46.tmp_4"
+  min_shape: 4
+  min_shape: 256
+  min_shape: 6
+  min_shape: 160
+  max_shape: 6
+  max_shape: 256
+  max_shape: 6
+  max_shape: 160
+  opt_shape: 4
+  opt_shape: 256
+  opt_shape: 6
+  opt_shape: 160
+}
+shape_range_info {
+  name: "batch_norm_46.w_0"
+  min_shape: 256
+  max_shape: 256
+  opt_shape: 256
+}
+shape_range_info {
+  name: "batch_norm_46.w_1"
+  min_shape: 256
+  max_shape: 256
+  opt_shape: 256
+}
+shape_range_info {
+  name: "batch_norm_46.w_2"
+  min_shape: 256
+  max_shape: 256
+  opt_shape: 256
+}
+shape_range_info {
+  name: "batch_norm_47.b_0"
+  min_shape: 256
+  max_shape: 256
+  opt_shape: 256
+}
+shape_range_info {
+  name: "batch_norm_47.tmp_3"
+  min_shape: 4
+  min_shape: 256
+  min_shape: 6
+  min_shape: 160
+  max_shape: 6
+  max_shape: 256
+  max_shape: 6
+  max_shape: 160
+  opt_shape: 4
+  opt_shape: 256
+  opt_shape: 6
+  opt_shape: 160
+}
+shape_range_info {
+  name: "batch_norm_47.tmp_4"
+  min_shape: 4
+  min_shape: 256
+  min_shape: 6
+  min_shape: 160
+  max_shape: 6
+  max_shape: 256
+  max_shape: 6
+  max_shape: 160
+  opt_shape: 4
+  opt_shape: 256
+  opt_shape: 6
+  opt_shape: 160
+}
+shape_range_info {
+  name: "batch_norm_47.w_0"
+  min_shape: 256
+  max_shape: 256
+  opt_shape: 256
+}
+shape_range_info {
+  name: "batch_norm_47.w_1"
+  min_shape: 256
+  max_shape: 256
+  opt_shape: 256
+}
+shape_range_info {
+  name: "batch_norm_47.w_2"
+  min_shape: 256
+  max_shape: 256
+  opt_shape: 256
+}
+shape_range_info {
+  name: "batch_norm_48.b_0"
+  min_shape: 256
+  max_shape: 256
+  opt_shape: 256
+}
+shape_range_info {
+  name: "batch_norm_48.tmp_3"
+  min_shape: 4
+  min_shape: 256
+  min_shape: 6
+  min_shape: 160
+  max_shape: 6
+  max_shape: 256
+  max_shape: 6
+  max_shape: 160
+  opt_shape: 4
+  opt_shape: 256
+  opt_shape: 6
+  opt_shape: 160
+}
+shape_range_info {
+  name: "batch_norm_48.tmp_4"
+  min_shape: 4
+  min_shape: 256
+  min_shape: 6
+  min_shape: 160
+  max_shape: 6
+  max_shape: 256
+  max_shape: 6
+  max_shape: 160
+  opt_shape: 4
+  opt_shape: 256
+  opt_shape: 6
+  opt_shape: 160
+}
+shape_range_info {
+  name: "batch_norm_48.w_0"
+  min_shape: 256
+  max_shape: 256
+  opt_shape: 256
+}
+shape_range_info {
+  name: "batch_norm_48.w_1"
+  min_shape: 256
+  max_shape: 256
+  opt_shape: 256
+}
+shape_range_info {
+  name: "batch_norm_48.w_2"
+  min_shape: 256
+  max_shape: 256
+  opt_shape: 256
+}
+shape_range_info {
+  name: "batch_norm_49.b_0"
+  min_shape: 256
+  max_shape: 256
+  opt_shape: 256
+}
+shape_range_info {
+  name: "batch_norm_49.tmp_3"
+  min_shape: 4
+  min_shape: 256
+  min_shape: 6
+  min_shape: 160
+  max_shape: 6
+  max_shape: 256
+  max_shape: 6
+  max_shape: 160
+  opt_shape: 4
+  opt_shape: 256
+  opt_shape: 6
+  opt_shape: 160
+}
+shape_range_info {
+  name: "batch_norm_49.tmp_4"
+  min_shape: 4
+  min_shape: 256
+  min_shape: 6
+  min_shape: 160
+  max_shape: 6
+  max_shape: 256
+  max_shape: 6
+  max_shape: 160
+  opt_shape: 4
+  opt_shape: 256
+  opt_shape: 6
+  opt_shape: 160
+}
+shape_range_info {
+  name: "batch_norm_49.w_0"
+  min_shape: 256
+  max_shape: 256
+  opt_shape: 256
+}
+shape_range_info {
+  name: "batch_norm_49.w_1"
+  min_shape: 256
+  max_shape: 256
+  opt_shape: 256
+}
+shape_range_info {
+  name: "batch_norm_49.w_2"
+  min_shape: 256
+  max_shape: 256
+  opt_shape: 256
+}
+shape_range_info {
+  name: "batch_norm_50.b_0"
+  min_shape: 256
+  max_shape: 256
+  opt_shape: 256
+}
+shape_range_info {
+  name: "batch_norm_50.tmp_3"
+  min_shape: 4
+  min_shape: 256
+  min_shape: 3
+  min_shape: 160
+  max_shape: 6
+  max_shape: 256
+  max_shape: 3
+  max_shape: 160
+  opt_shape: 4
+  opt_shape: 256
+  opt_shape: 3
+  opt_shape: 160
+}
+shape_range_info {
+  name: "batch_norm_50.tmp_4"
+  min_shape: 4
+  min_shape: 256
+  min_shape: 3
+  min_shape: 160
+  max_shape: 6
+  max_shape: 256
+  max_shape: 3
+  max_shape: 160
+  opt_shape: 4
+  opt_shape: 256
+  opt_shape: 3
+  opt_shape: 160
+}
+shape_range_info {
+  name: "batch_norm_50.w_0"
+  min_shape: 256
+  max_shape: 256
+  opt_shape: 256
+}
+shape_range_info {
+  name: "batch_norm_50.w_1"
+  min_shape: 256
+  max_shape: 256
+  opt_shape: 256
+}
+shape_range_info {
+  name: "batch_norm_50.w_2"
+  min_shape: 256
+  max_shape: 256
+  opt_shape: 256
+}
+shape_range_info {
+  name: "batch_norm_51.b_0"
+  min_shape: 512
+  max_shape: 512
+  opt_shape: 512
+}
+shape_range_info {
+  name: "batch_norm_51.tmp_3"
+  min_shape: 4
+  min_shape: 512
+  min_shape: 3
+  min_shape: 160
+  max_shape: 6
+  max_shape: 512
+  max_shape: 3
+  max_shape: 160
+  opt_shape: 4
+  opt_shape: 512
+  opt_shape: 3
+  opt_shape: 160
+}
+shape_range_info {
+  name: "batch_norm_51.tmp_4"
+  min_shape: 4
+  min_shape: 512
+  min_shape: 3
+  min_shape: 160
+  max_shape: 6
+  max_shape: 512
+  max_shape: 3
+  max_shape: 160
+  opt_shape: 4
+  opt_shape: 512
+  opt_shape: 3
+  opt_shape: 160
+}
+shape_range_info {
+  name: "batch_norm_51.w_0"
+  min_shape: 512
+  max_shape: 512
+  opt_shape: 512
+}
+shape_range_info {
+  name: "batch_norm_51.w_1"
+  min_shape: 512
+  max_shape: 512
+  opt_shape: 512
+}
+shape_range_info {
+  name: "batch_norm_51.w_2"
+  min_shape: 512
+  max_shape: 512
+  opt_shape: 512
+}
+shape_range_info {
+  name: "batch_norm_52.b_0"
+  min_shape: 512
+  max_shape: 512
+  opt_shape: 512
+}
+shape_range_info {
+  name: "batch_norm_52.tmp_3"
+  min_shape: 4
+  min_shape: 512
+  min_shape: 3
+  min_shape: 80
+  max_shape: 6
+  max_shape: 512
+  max_shape: 3
+  max_shape: 80
+  opt_shape: 4
+  opt_shape: 512
+  opt_shape: 3
+  opt_shape: 80
+}
+shape_range_info {
+  name: "batch_norm_52.tmp_4"
+  min_shape: 4
+  min_shape: 512
+  min_shape: 3
+  min_shape: 80
+  max_shape: 6
+  max_shape: 512
+  max_shape: 3
+  max_shape: 80
+  opt_shape: 4
+  opt_shape: 512
+  opt_shape: 3
+  opt_shape: 80
+}
+shape_range_info {
+  name: "batch_norm_52.w_0"
+  min_shape: 512
+  max_shape: 512
+  opt_shape: 512
+}
+shape_range_info {
+  name: "batch_norm_52.w_1"
+  min_shape: 512
+  max_shape: 512
+  opt_shape: 512
+}
+shape_range_info {
+  name: "batch_norm_52.w_2"
+  min_shape: 512
+  max_shape: 512
+  opt_shape: 512
+}
+shape_range_info {
+  name: "batch_norm_53.b_0"
+  min_shape: 512
+  max_shape: 512
+  opt_shape: 512
+}
+shape_range_info {
+  name: "batch_norm_53.tmp_3"
+  min_shape: 4
+  min_shape: 512
+  min_shape: 3
+  min_shape: 80
+  max_shape: 6
+  max_shape: 512
+  max_shape: 3
+  max_shape: 80
+  opt_shape: 4
+  opt_shape: 512
+  opt_shape: 3
+  opt_shape: 80
+}
+shape_range_info {
+  name: "batch_norm_53.tmp_4"
+  min_shape: 4
+  min_shape: 512
+  min_shape: 3
+  min_shape: 80
+  max_shape: 6
+  max_shape: 512
+  max_shape: 3
+  max_shape: 80
+  opt_shape: 4
+  opt_shape: 512
+  opt_shape: 3
+  opt_shape: 80
+}
+shape_range_info {
+  name: "batch_norm_53.w_0"
+  min_shape: 512
+  max_shape: 512
+  opt_shape: 512
+}
+shape_range_info {
+  name: "batch_norm_53.w_1"
+  min_shape: 512
+  max_shape: 512
+  opt_shape: 512
+}
+shape_range_info {
+  name: "batch_norm_53.w_2"
+  min_shape: 512
+  max_shape: 512
+  opt_shape: 512
+}
+shape_range_info {
+  name: "batch_norm_59.tmp_2"
+  min_shape: 4
+  min_shape: 64
+  min_shape: 1
+  min_shape: 40
+  max_shape: 6
+  max_shape: 64
+  max_shape: 1
+  max_shape: 40
+  opt_shape: 4
+  opt_shape: 64
+  opt_shape: 1
+  opt_shape: 40
+}
+shape_range_info {
+  name: "batch_norm_60.tmp_2"
+  min_shape: 4
+  min_shape: 120
+  min_shape: 1
+  min_shape: 40
+  max_shape: 6
+  max_shape: 120
+  max_shape: 1
+  max_shape: 40
+  opt_shape: 4
+  opt_shape: 120
+  opt_shape: 1
+  opt_shape: 40
+}
+shape_range_info {
+  name: "batch_norm_61.tmp_2"
+  min_shape: 4
+  min_shape: 512
+  min_shape: 1
+  min_shape: 40
+  max_shape: 6
+  max_shape: 512
+  max_shape: 1
+  max_shape: 40
+  opt_shape: 4
+  opt_shape: 512
+  opt_shape: 1
+  opt_shape: 40
+}
+shape_range_info {
+  name: "batch_norm_62.tmp_2"
+  min_shape: 4
+  min_shape: 64
+  min_shape: 1
+  min_shape: 40
+  max_shape: 6
+  max_shape: 64
+  max_shape: 1
+  max_shape: 40
+  opt_shape: 4
+  opt_shape: 64
+  opt_shape: 1
+  opt_shape: 40
+}
+shape_range_info {
+  name: "batch_norm_63.tmp_2"
+  min_shape: 4
+  min_shape: 64
+  min_shape: 1
+  min_shape: 40
+  max_shape: 6
+  max_shape: 64
+  max_shape: 1
+  max_shape: 40
+  opt_shape: 4
+  opt_shape: 64
+  opt_shape: 1
+  opt_shape: 40
+}
+shape_range_info {
+  name: "concat_1.tmp_0"
+  min_shape: 4
+  min_shape: 1024
+  min_shape: 1
+  min_shape: 40
+  max_shape: 6
+  max_shape: 1024
+  max_shape: 1
+  max_shape: 40
+  opt_shape: 4
+  opt_shape: 1024
+  opt_shape: 1
+  opt_shape: 40
+}
+shape_range_info {
+  name: "conv2d_100.tmp_0"
+  min_shape: 4
+  min_shape: 64
+  min_shape: 24
+  min_shape: 160
+  max_shape: 6
+  max_shape: 64
+  max_shape: 24
+  max_shape: 160
+  opt_shape: 4
+  opt_shape: 64
+  opt_shape: 24
+  opt_shape: 160
+}
+shape_range_info {
+  name: "conv2d_101.tmp_0"
+  min_shape: 4
+  min_shape: 128
+  min_shape: 12
+  min_shape: 160
+  max_shape: 6
+  max_shape: 128
+  max_shape: 12
+  max_shape: 160
+  opt_shape: 4
+  opt_shape: 128
+  opt_shape: 12
+  opt_shape: 160
+}
+shape_range_info {
+  name: "conv2d_102.tmp_0"
+  min_shape: 4
+  min_shape: 128
+  min_shape: 12
+  min_shape: 160
+  max_shape: 6
+  max_shape: 128
+  max_shape: 12
+  max_shape: 160
+  opt_shape: 4
+  opt_shape: 128
+  opt_shape: 12
+  opt_shape: 160
+}
+shape_range_info {
+  name: "conv2d_103.tmp_0"
+  min_shape: 4
+  min_shape: 256
+  min_shape: 6
+  min_shape: 160
+  max_shape: 6
+  max_shape: 256
+  max_shape: 6
+  max_shape: 160
+  opt_shape: 4
+  opt_shape: 256
+  opt_shape: 6
+  opt_shape: 160
+}
+shape_range_info {
+  name: "conv2d_104.tmp_0"
+  min_shape: 4
+  min_shape: 256
+  min_shape: 6
+  min_shape: 160
+  max_shape: 6
+  max_shape: 256
+  max_shape: 6
+  max_shape: 160
+  opt_shape: 4
+  opt_shape: 256
+  opt_shape: 6
+  opt_shape: 160
+}
+shape_range_info {
+  name: "conv2d_105.tmp_0"
+  min_shape: 4
+  min_shape: 256
+  min_shape: 6
+  min_shape: 160
+  max_shape: 6
+  max_shape: 256
+  max_shape: 6
+  max_shape: 160
+  opt_shape: 4
+  opt_shape: 256
+  opt_shape: 6
+  opt_shape: 160
+}
+shape_range_info {
+  name: "conv2d_106.tmp_0"
+  min_shape: 4
+  min_shape: 256
+  min_shape: 6
+  min_shape: 160
+  max_shape: 6
+  max_shape: 256
+  max_shape: 6
+  max_shape: 160
+  opt_shape: 4
+  opt_shape: 256
+  opt_shape: 6
+  opt_shape: 160
+}
+shape_range_info {
+  name: "conv2d_107.tmp_0"
+  min_shape: 4
+  min_shape: 256
+  min_shape: 6
+  min_shape: 160
+  max_shape: 6
+  max_shape: 256
+  max_shape: 6
+  max_shape: 160
+  opt_shape: 4
+  opt_shape: 256
+  opt_shape: 6
+  opt_shape: 160
+}
+shape_range_info {
+  name: "conv2d_108.tmp_0"
+  min_shape: 4
+  min_shape: 256
+  min_shape: 6
+  min_shape: 160
+  max_shape: 6
+  max_shape: 256
+  max_shape: 6
+  max_shape: 160
+  opt_shape: 4
+  opt_shape: 256
+  opt_shape: 6
+  opt_shape: 160
+}
+shape_range_info {
+  name: "conv2d_109.tmp_0"
+  min_shape: 4
+  min_shape: 64
+  min_shape: 1
+  min_shape: 1
+  max_shape: 6
+  max_shape: 64
+  max_shape: 1
+  max_shape: 1
+  opt_shape: 4
+  opt_shape: 64
+  opt_shape: 1
+  opt_shape: 1
+}
+shape_range_info {
+  name: "conv2d_109.tmp_1"
+  min_shape: 4
+  min_shape: 64
+  min_shape: 1
+  min_shape: 1
+  max_shape: 6
+  max_shape: 64
+  max_shape: 1
+  max_shape: 1
+  opt_shape: 4
+  opt_shape: 64
+  opt_shape: 1
+  opt_shape: 1
+}
+shape_range_info {
+  name: "conv2d_110.tmp_0"
+  min_shape: 4
+  min_shape: 256
+  min_shape: 1
+  min_shape: 1
+  max_shape: 6
+  max_shape: 256
+  max_shape: 1
+  max_shape: 1
+  opt_shape: 4
+  opt_shape: 256
+  opt_shape: 1
+  opt_shape: 1
+}
+shape_range_info {
+  name: "conv2d_110.tmp_1"
+  min_shape: 4
+  min_shape: 256
+  min_shape: 1
+  min_shape: 1
+  max_shape: 6
+  max_shape: 256
+  max_shape: 1
+  max_shape: 1
+  opt_shape: 4
+  opt_shape: 256
+  opt_shape: 1
+  opt_shape: 1
+}
+shape_range_info {
+  name: "conv2d_111.tmp_0"
+  min_shape: 4
+  min_shape: 512
+  min_shape: 3
+  min_shape: 160
+  max_shape: 6
+  max_shape: 512
+  max_shape: 3
+  max_shape: 160
+  opt_shape: 4
+  opt_shape: 512
+  opt_shape: 3
+  opt_shape: 160
+}
+shape_range_info {
+  name: "conv2d_112.tmp_0"
+  min_shape: 4
+  min_shape: 128
+  min_shape: 1
+  min_shape: 1
+  max_shape: 6
+  max_shape: 128
+  max_shape: 1
+  max_shape: 1
+  opt_shape: 4
+  opt_shape: 128
+  opt_shape: 1
+  opt_shape: 1
+}
+shape_range_info {
+  name: "conv2d_112.tmp_1"
+  min_shape: 4
+  min_shape: 128
+  min_shape: 1
+  min_shape: 1
+  max_shape: 6
+  max_shape: 128
+  max_shape: 1
+  max_shape: 1
+  opt_shape: 4
+  opt_shape: 128
+  opt_shape: 1
+  opt_shape: 1
+}
+shape_range_info {
+  name: "conv2d_113.tmp_0"
+  min_shape: 4
+  min_shape: 512
+  min_shape: 1
+  min_shape: 1
+  max_shape: 6
+  max_shape: 512
+  max_shape: 1
+  max_shape: 1
+  opt_shape: 4
+  opt_shape: 512
+  opt_shape: 1
+  opt_shape: 1
+}
+shape_range_info {
+  name: "conv2d_113.tmp_1"
+  min_shape: 4
+  min_shape: 512
+  min_shape: 1
+  min_shape: 1
+  max_shape: 6
+  max_shape: 512
+  max_shape: 1
+  max_shape: 1
+  opt_shape: 4
+  opt_shape: 512
+  opt_shape: 1
+  opt_shape: 1
+}
+shape_range_info {
+  name: "conv2d_114.tmp_0"
+  min_shape: 4
+  min_shape: 512
+  min_shape: 3
+  min_shape: 80
+  max_shape: 6
+  max_shape: 512
+  max_shape: 3
+  max_shape: 80
+  opt_shape: 4
+  opt_shape: 512
+  opt_shape: 3
+  opt_shape: 80
+}
+shape_range_info {
+  name: "conv2d_115.tmp_0"
+  min_shape: 4
+  min_shape: 64
+  min_shape: 1
+  min_shape: 40
+  max_shape: 6
+  max_shape: 64
+  max_shape: 1
+  max_shape: 40
+  opt_shape: 4
+  opt_shape: 64
+  opt_shape: 1
+  opt_shape: 40
+}
+shape_range_info {
+  name: "conv2d_116.tmp_0"
+  min_shape: 4
+  min_shape: 120
+  min_shape: 1
+  min_shape: 40
+  max_shape: 6
+  max_shape: 120
+  max_shape: 1
+  max_shape: 40
+  opt_shape: 4
+  opt_shape: 120
+  opt_shape: 1
+  opt_shape: 40
+}
+shape_range_info {
+  name: "conv2d_117.tmp_0"
+  min_shape: 4
+  min_shape: 512
+  min_shape: 1
+  min_shape: 40
+  max_shape: 6
+  max_shape: 512
+  max_shape: 1
+  max_shape: 40
+  opt_shape: 4
+  opt_shape: 512
+  opt_shape: 1
+  opt_shape: 40
+}
+shape_range_info {
+  name: "conv2d_118.tmp_0"
+  min_shape: 4
+  min_shape: 64
+  min_shape: 1
+  min_shape: 40
+  max_shape: 6
+  max_shape: 64
+  max_shape: 1
+  max_shape: 40
+  opt_shape: 4
+  opt_shape: 64
+  opt_shape: 1
+  opt_shape: 40
+}
+shape_range_info {
+  name: "conv2d_119.tmp_0"
+  min_shape: 4
+  min_shape: 64
+  min_shape: 1
+  min_shape: 40
+  max_shape: 6
+  max_shape: 64
+  max_shape: 1
+  max_shape: 40
+  opt_shape: 4
+  opt_shape: 64
+  opt_shape: 1
+  opt_shape: 40
+}
+shape_range_info {
+  name: "conv2d_37.w_0"
+  min_shape: 16
+  min_shape: 3
+  min_shape: 3
+  min_shape: 3
+  max_shape: 16
+  max_shape: 3
+  max_shape: 3
+  max_shape: 3
+  opt_shape: 16
+  opt_shape: 3
+  opt_shape: 3
+  opt_shape: 3
+}
+shape_range_info {
+  name: "conv2d_38.w_0"
+  min_shape: 16
+  min_shape: 1
+  min_shape: 3
+  min_shape: 3
+  max_shape: 16
+  max_shape: 1
+  max_shape: 3
+  max_shape: 3
+  opt_shape: 16
+  opt_shape: 1
+  opt_shape: 3
+  opt_shape: 3
+}
+shape_range_info {
+  name: "conv2d_39.w_0"
+  min_shape: 32
+  min_shape: 16
+  min_shape: 1
+  min_shape: 1
+  max_shape: 32
+  max_shape: 16
+  max_shape: 1
+  max_shape: 1
+  opt_shape: 32
+  opt_shape: 16
+  opt_shape: 1
+  opt_shape: 1
+}
+shape_range_info {
+  name: "conv2d_40.w_0"
+  min_shape: 32
+  min_shape: 1
+  min_shape: 3
+  min_shape: 3
+  max_shape: 32
+  max_shape: 1
+  max_shape: 3
+  max_shape: 3
+  opt_shape: 32
+  opt_shape: 1
+  opt_shape: 3
+  opt_shape: 3
+}
+shape_range_info {
+  name: "conv2d_41.w_0"
+  min_shape: 64
+  min_shape: 32
+  min_shape: 1
+  min_shape: 1
+  max_shape: 64
+  max_shape: 32
+  max_shape: 1
+  max_shape: 1
+  opt_shape: 64
+  opt_shape: 32
+  opt_shape: 1
+  opt_shape: 1
+}
+shape_range_info {
+  name: "conv2d_42.w_0"
+  min_shape: 64
+  min_shape: 1
+  min_shape: 3
+  min_shape: 3
+  max_shape: 64
+  max_shape: 1
+  max_shape: 3
+  max_shape: 3
+  opt_shape: 64
+  opt_shape: 1
+  opt_shape: 3
+  opt_shape: 3
+}
+shape_range_info {
+  name: "conv2d_43.w_0"
+  min_shape: 64
+  min_shape: 64
+  min_shape: 1
+  min_shape: 1
+  max_shape: 64
+  max_shape: 64
+  max_shape: 1
+  max_shape: 1
+  opt_shape: 64
+  opt_shape: 64
+  opt_shape: 1
+  opt_shape: 1
+}
+shape_range_info {
+  name: "conv2d_44.w_0"
+  min_shape: 64
+  min_shape: 1
+  min_shape: 3
+  min_shape: 3
+  max_shape: 64
+  max_shape: 1
+  max_shape: 3
+  max_shape: 3
+  opt_shape: 64
+  opt_shape: 1
+  opt_shape: 3
+  opt_shape: 3
+}
+shape_range_info {
+  name: "conv2d_45.w_0"
+  min_shape: 128
+  min_shape: 64
+  min_shape: 1
+  min_shape: 1
+  max_shape: 128
+  max_shape: 64
+  max_shape: 1
+  max_shape: 1
+  opt_shape: 128
+  opt_shape: 64
+  opt_shape: 1
+  opt_shape: 1
+}
+shape_range_info {
+  name: "conv2d_46.w_0"
+  min_shape: 128
+  min_shape: 1
+  min_shape: 3
+  min_shape: 3
+  max_shape: 128
+  max_shape: 1
+  max_shape: 3
+  max_shape: 3
+  opt_shape: 128
+  opt_shape: 1
+  opt_shape: 3
+  opt_shape: 3
+}
+shape_range_info {
+  name: "conv2d_47.w_0"
+  min_shape: 128
+  min_shape: 128
+  min_shape: 1
+  min_shape: 1
+  max_shape: 128
+  max_shape: 128
+  max_shape: 1
+  max_shape: 1
+  opt_shape: 128
+  opt_shape: 128
+  opt_shape: 1
+  opt_shape: 1
+}
+shape_range_info {
+  name: "conv2d_48.w_0"
+  min_shape: 128
+  min_shape: 1
+  min_shape: 3
+  min_shape: 3
+  max_shape: 128
+  max_shape: 1
+  max_shape: 3
+  max_shape: 3
+  opt_shape: 128
+  opt_shape: 1
+  opt_shape: 3
+  opt_shape: 3
+}
+shape_range_info {
+  name: "conv2d_49.w_0"
+  min_shape: 256
+  min_shape: 128
+  min_shape: 1
+  min_shape: 1
+  max_shape: 256
+  max_shape: 128
+  max_shape: 1
+  max_shape: 1
+  opt_shape: 256
+  opt_shape: 128
+  opt_shape: 1
+  opt_shape: 1
+}
+shape_range_info {
+  name: "conv2d_50.w_0"
+  min_shape: 256
+  min_shape: 1
+  min_shape: 5
+  min_shape: 5
+  max_shape: 256
+  max_shape: 1
+  max_shape: 5
+  max_shape: 5
+  opt_shape: 256
+  opt_shape: 1
+  opt_shape: 5
+  opt_shape: 5
+}
+shape_range_info {
+  name: "conv2d_51.w_0"
+  min_shape: 256
+  min_shape: 256
+  min_shape: 1
+  min_shape: 1
+  max_shape: 256
+  max_shape: 256
+  max_shape: 1
+  max_shape: 1
+  opt_shape: 256
+  opt_shape: 256
+  opt_shape: 1
+  opt_shape: 1
+}
+shape_range_info {
+  name: "conv2d_52.w_0"
+  min_shape: 256
+  min_shape: 1
+  min_shape: 5
+  min_shape: 5
+  max_shape: 256
+  max_shape: 1
+  max_shape: 5
+  max_shape: 5
+  opt_shape: 256
+  opt_shape: 1
+  opt_shape: 5
+  opt_shape: 5
+}
+shape_range_info {
+  name: "conv2d_53.w_0"
+  min_shape: 256
+  min_shape: 256
+  min_shape: 1
+  min_shape: 1
+  max_shape: 256
+  max_shape: 256
+  max_shape: 1
+  max_shape: 1
+  opt_shape: 256
+  opt_shape: 256
+  opt_shape: 1
+  opt_shape: 1
+}
+shape_range_info {
+  name: "conv2d_54.w_0"
+  min_shape: 256
+  min_shape: 1
+  min_shape: 5
+  min_shape: 5
+  max_shape: 256
+  max_shape: 1
+  max_shape: 5
+  max_shape: 5
+  opt_shape: 256
+  opt_shape: 1
+  opt_shape: 5
+  opt_shape: 5
+}
+shape_range_info {
+  name: "conv2d_55.w_0"
+  min_shape: 256
+  min_shape: 256
+  min_shape: 1
+  min_shape: 1
+  max_shape: 256
+  max_shape: 256
+  max_shape: 1
+  max_shape: 1
+  opt_shape: 256
+  opt_shape: 256
+  opt_shape: 1
+  opt_shape: 1
+}
+shape_range_info {
+  name: "conv2d_56.w_0"
+  min_shape: 256
+  min_shape: 1
+  min_shape: 5
+  min_shape: 5
+  max_shape: 256
+  max_shape: 1
+  max_shape: 5
+  max_shape: 5
+  opt_shape: 256
+  opt_shape: 1
+  opt_shape: 5
+  opt_shape: 5
+}
+shape_range_info {
+  name: "conv2d_57.w_0"
+  min_shape: 256
+  min_shape: 256
+  min_shape: 1
+  min_shape: 1
+  max_shape: 256
+  max_shape: 256
+  max_shape: 1
+  max_shape: 1
+  opt_shape: 256
+  opt_shape: 256
+  opt_shape: 1
+  opt_shape: 1
+}
+shape_range_info {
+  name: "conv2d_58.w_0"
+  min_shape: 256
+  min_shape: 1
+  min_shape: 5
+  min_shape: 5
+  max_shape: 256
+  max_shape: 1
+  max_shape: 5
+  max_shape: 5
+  opt_shape: 256
+  opt_shape: 1
+  opt_shape: 5
+  opt_shape: 5
+}
+shape_range_info {
+  name: "conv2d_59.w_0"
+  min_shape: 256
+  min_shape: 256
+  min_shape: 1
+  min_shape: 1
+  max_shape: 256
+  max_shape: 256
+  max_shape: 1
+  max_shape: 1
+  opt_shape: 256
+  opt_shape: 256
+  opt_shape: 1
+  opt_shape: 1
+}
+shape_range_info {
+  name: "conv2d_60.w_0"
+  min_shape: 256
+  min_shape: 1
+  min_shape: 5
+  min_shape: 5
+  max_shape: 256
+  max_shape: 1
+  max_shape: 5
+  max_shape: 5
+  opt_shape: 256
+  opt_shape: 1
+  opt_shape: 5
+  opt_shape: 5
+}
+shape_range_info {
+  name: "conv2d_61.b_0"
+  min_shape: 64
+  max_shape: 64
+  opt_shape: 64
+}
+shape_range_info {
+  name: "conv2d_61.w_0"
+  min_shape: 64
+  min_shape: 256
+  min_shape: 1
+  min_shape: 1
+  max_shape: 64
+  max_shape: 256
+  max_shape: 1
+  max_shape: 1
+  opt_shape: 64
+  opt_shape: 256
+  opt_shape: 1
+  opt_shape: 1
+}
+shape_range_info {
+  name: "conv2d_62.b_0"
+  min_shape: 256
+  max_shape: 256
+  opt_shape: 256
+}
+shape_range_info {
+  name: "conv2d_62.w_0"
+  min_shape: 256
+  min_shape: 64
+  min_shape: 1
+  min_shape: 1
+  max_shape: 256
+  max_shape: 64
+  max_shape: 1
+  max_shape: 1
+  opt_shape: 256
+  opt_shape: 64
+  opt_shape: 1
+  opt_shape: 1
+}
+shape_range_info {
+  name: "conv2d_63.w_0"
+  min_shape: 512
+  min_shape: 256
+  min_shape: 1
+  min_shape: 1
+  max_shape: 512
+  max_shape: 256
+  max_shape: 1
+  max_shape: 1
+  opt_shape: 512
+  opt_shape: 256
+  opt_shape: 1
+  opt_shape: 1
+}
+shape_range_info {
+  name: "conv2d_64.w_0"
+  min_shape: 512
+  min_shape: 1
+  min_shape: 5
+  min_shape: 5
+  max_shape: 512
+  max_shape: 1
+  max_shape: 5
+  max_shape: 5
+  opt_shape: 512
+  opt_shape: 1
+  opt_shape: 5
+  opt_shape: 5
+}
+shape_range_info {
+  name: "conv2d_65.b_0"
+  min_shape: 128
+  max_shape: 128
+  opt_shape: 128
+}
+shape_range_info {
+  name: "conv2d_65.w_0"
+  min_shape: 128
+  min_shape: 512
+  min_shape: 1
+  min_shape: 1
+  max_shape: 128
+  max_shape: 512
+  max_shape: 1
+  max_shape: 1
+  opt_shape: 128
+  opt_shape: 512
+  opt_shape: 1
+  opt_shape: 1
+}
+shape_range_info {
+  name: "conv2d_66.b_0"
+  min_shape: 512
+  max_shape: 512
+  opt_shape: 512
+}
+shape_range_info {
+  name: "conv2d_66.w_0"
+  min_shape: 512
+  min_shape: 128
+  min_shape: 1
+  min_shape: 1
+  max_shape: 512
+  max_shape: 128
+  max_shape: 1
+  max_shape: 1
+  opt_shape: 512
+  opt_shape: 128
+  opt_shape: 1
+  opt_shape: 1
+}
+shape_range_info {
+  name: "conv2d_67.w_0"
+  min_shape: 512
+  min_shape: 512
+  min_shape: 1
+  min_shape: 1
+  max_shape: 512
+  max_shape: 512
+  max_shape: 1
+  max_shape: 1
+  opt_shape: 512
+  opt_shape: 512
+  opt_shape: 1
+  opt_shape: 1
+}
+shape_range_info {
+  name: "conv2d_68.w_0"
+  min_shape: 64
+  min_shape: 512
+  min_shape: 3
+  min_shape: 3
+  max_shape: 64
+  max_shape: 512
+  max_shape: 3
+  max_shape: 3
+  opt_shape: 64
+  opt_shape: 512
+  opt_shape: 3
+  opt_shape: 3
+}
+shape_range_info {
+  name: "conv2d_69.w_0"
+  min_shape: 120
+  min_shape: 64
+  min_shape: 1
+  min_shape: 1
+  max_shape: 120
+  max_shape: 64
+  max_shape: 1
+  max_shape: 1
+  opt_shape: 120
+  opt_shape: 64
+  opt_shape: 1
+  opt_shape: 1
+}
+shape_range_info {
+  name: "conv2d_70.w_0"
+  min_shape: 512
+  min_shape: 120
+  min_shape: 1
+  min_shape: 1
+  max_shape: 512
+  max_shape: 120
+  max_shape: 1
+  max_shape: 1
+  opt_shape: 512
+  opt_shape: 120
+  opt_shape: 1
+  opt_shape: 1
+}
+shape_range_info {
+  name: "conv2d_71.w_0"
+  min_shape: 64
+  min_shape: 1024
+  min_shape: 3
+  min_shape: 3
+  max_shape: 64
+  max_shape: 1024
+  max_shape: 3
+  max_shape: 3
+  opt_shape: 64
+  opt_shape: 1024
+  opt_shape: 3
+  opt_shape: 3
+}
+shape_range_info {
+  name: "conv2d_72.w_0"
+  min_shape: 64
+  min_shape: 64
+  min_shape: 1
+  min_shape: 1
+  max_shape: 64
+  max_shape: 64
+  max_shape: 1
+  max_shape: 1
+  opt_shape: 64
+  opt_shape: 64
+  opt_shape: 1
+  opt_shape: 1
+}
+shape_range_info {
+  name: "conv2d_97.tmp_0"
+  min_shape: 4
+  min_shape: 16
+  min_shape: 24
+  min_shape: 160
+  max_shape: 6
+  max_shape: 16
+  max_shape: 24
+  max_shape: 160
+  opt_shape: 4
+  opt_shape: 16
+  opt_shape: 24
+  opt_shape: 160
+}
+shape_range_info {
+  name: "conv2d_98.tmp_0"
+  min_shape: 4
+  min_shape: 32
+  min_shape: 24
+  min_shape: 160
+  max_shape: 6
+  max_shape: 32
+  max_shape: 24
+  max_shape: 160
+  opt_shape: 4
+  opt_shape: 32
+  opt_shape: 24
+  opt_shape: 160
+}
+shape_range_info {
+  name: "conv2d_99.tmp_0"
+  min_shape: 4
+  min_shape: 64
+  min_shape: 24
+  min_shape: 160
+  max_shape: 6
+  max_shape: 64
+  max_shape: 24
+  max_shape: 160
+  opt_shape: 4
+  opt_shape: 64
+  opt_shape: 24
+  opt_shape: 160
+}
+shape_range_info {
+  name: "depthwise_conv2d_13.tmp_0"
+  min_shape: 4
+  min_shape: 16
+  min_shape: 24
+  min_shape: 160
+  max_shape: 6
+  max_shape: 16
+  max_shape: 24
+  max_shape: 160
+  opt_shape: 4
+  opt_shape: 16
+  opt_shape: 24
+  opt_shape: 160
+}
+shape_range_info {
+  name: "depthwise_conv2d_14.tmp_0"
+  min_shape: 4
+  min_shape: 32
+  min_shape: 24
+  min_shape: 160
+  max_shape: 6
+  max_shape: 32
+  max_shape: 24
+  max_shape: 160
+  opt_shape: 4
+  opt_shape: 32
+  opt_shape: 24
+  opt_shape: 160
+}
+shape_range_info {
+  name: "depthwise_conv2d_15.tmp_0"
+  min_shape: 4
+  min_shape: 64
+  min_shape: 24
+  min_shape: 160
+  max_shape: 6
+  max_shape: 64
+  max_shape: 24
+  max_shape: 160
+  opt_shape: 4
+  opt_shape: 64
+  opt_shape: 24
+  opt_shape: 160
+}
+shape_range_info {
+  name: "depthwise_conv2d_16.tmp_0"
+  min_shape: 4
+  min_shape: 64
+  min_shape: 12
+  min_shape: 160
+  max_shape: 6
+  max_shape: 64
+  max_shape: 12
+  max_shape: 160
+  opt_shape: 4
+  opt_shape: 64
+  opt_shape: 12
+  opt_shape: 160
+}
+shape_range_info {
+  name: "depthwise_conv2d_17.tmp_0"
+  min_shape: 4
+  min_shape: 128
+  min_shape: 12
+  min_shape: 160
+  max_shape: 6
+  max_shape: 128
+  max_shape: 12
+  max_shape: 160
+  opt_shape: 4
+  opt_shape: 128
+  opt_shape: 12
+  opt_shape: 160
+}
+shape_range_info {
+  name: "depthwise_conv2d_18.tmp_0"
+  min_shape: 4
+  min_shape: 128
+  min_shape: 6
+  min_shape: 160
+  max_shape: 6
+  max_shape: 128
+  max_shape: 6
+  max_shape: 160
+  opt_shape: 4
+  opt_shape: 128
+  opt_shape: 6
+  opt_shape: 160
+}
+shape_range_info {
+  name: "depthwise_conv2d_19.tmp_0"
+  min_shape: 4
+  min_shape: 256
+  min_shape: 6
+  min_shape: 160
+  max_shape: 6
+  max_shape: 256
+  max_shape: 6
+  max_shape: 160
+  opt_shape: 4
+  opt_shape: 256
+  opt_shape: 6
+  opt_shape: 160
+}
+shape_range_info {
+  name: "depthwise_conv2d_20.tmp_0"
+  min_shape: 4
+  min_shape: 256
+  min_shape: 6
+  min_shape: 160
+  max_shape: 6
+  max_shape: 256
+  max_shape: 6
+  max_shape: 160
+  opt_shape: 4
+  opt_shape: 256
+  opt_shape: 6
+  opt_shape: 160
+}
+shape_range_info {
+  name: "depthwise_conv2d_21.tmp_0"
+  min_shape: 4
+  min_shape: 256
+  min_shape: 6
+  min_shape: 160
+  max_shape: 6
+  max_shape: 256
+  max_shape: 6
+  max_shape: 160
+  opt_shape: 4
+  opt_shape: 256
+  opt_shape: 6
+  opt_shape: 160
+}
+shape_range_info {
+  name: "depthwise_conv2d_22.tmp_0"
+  min_shape: 4
+  min_shape: 256
+  min_shape: 6
+  min_shape: 160
+  max_shape: 6
+  max_shape: 256
+  max_shape: 6
+  max_shape: 160
+  opt_shape: 4
+  opt_shape: 256
+  opt_shape: 6
+  opt_shape: 160
+}
+shape_range_info {
+  name: "depthwise_conv2d_23.tmp_0"
+  min_shape: 4
+  min_shape: 256
+  min_shape: 6
+  min_shape: 160
+  max_shape: 6
+  max_shape: 256
+  max_shape: 6
+  max_shape: 160
+  opt_shape: 4
+  opt_shape: 256
+  opt_shape: 6
+  opt_shape: 160
+}
+shape_range_info {
+  name: "depthwise_conv2d_24.tmp_0"
+  min_shape: 4
+  min_shape: 256
+  min_shape: 3
+  min_shape: 160
+  max_shape: 6
+  max_shape: 256
+  max_shape: 3
+  max_shape: 160
+  opt_shape: 4
+  opt_shape: 256
+  opt_shape: 3
+  opt_shape: 160
+}
+shape_range_info {
+  name: "depthwise_conv2d_25.tmp_0"
+  min_shape: 4
+  min_shape: 512
+  min_shape: 3
+  min_shape: 80
+  max_shape: 6
+  max_shape: 512
+  max_shape: 3
+  max_shape: 80
+  opt_shape: 4
+  opt_shape: 512
+  opt_shape: 3
+  opt_shape: 80
+}
+shape_range_info {
+  name: "dropout_22.tmp_0"
+  min_shape: 4
+  min_shape: 8
+  min_shape: 40
+  min_shape: 40
+  max_shape: 6
+  max_shape: 8
+  max_shape: 40
+  max_shape: 40
+  opt_shape: 4
+  opt_shape: 8
+  opt_shape: 40
+  opt_shape: 40
+}
+shape_range_info {
+  name: "dropout_23.tmp_0"
+  min_shape: 4
+  min_shape: 40
+  min_shape: 120
+  max_shape: 6
+  max_shape: 40
+  max_shape: 120
+  opt_shape: 4
+  opt_shape: 40
+  opt_shape: 120
+}
+shape_range_info {
+  name: "dropout_24.tmp_0"
+  min_shape: 4
+  min_shape: 40
+  min_shape: 240
+  max_shape: 6
+  max_shape: 40
+  max_shape: 240
+  opt_shape: 4
+  opt_shape: 40
+  opt_shape: 240
+}
+shape_range_info {
+  name: "dropout_25.tmp_0"
+  min_shape: 4
+  min_shape: 40
+  min_shape: 120
+  max_shape: 6
+  max_shape: 40
+  max_shape: 120
+  opt_shape: 4
+  opt_shape: 40
+  opt_shape: 120
+}
+shape_range_info {
+  name: "dropout_26.tmp_0"
+  min_shape: 4
+  min_shape: 8
+  min_shape: 40
+  min_shape: 40
+  max_shape: 6
+  max_shape: 8
+  max_shape: 40
+  max_shape: 40
+  opt_shape: 4
+  opt_shape: 8
+  opt_shape: 40
+  opt_shape: 40
+}
+shape_range_info {
+  name: "dropout_27.tmp_0"
+  min_shape: 4
+  min_shape: 40
+  min_shape: 120
+  max_shape: 6
+  max_shape: 40
+  max_shape: 120
+  opt_shape: 4
+  opt_shape: 40
+  opt_shape: 120
+}
+shape_range_info {
+  name: "dropout_28.tmp_0"
+  min_shape: 4
+  min_shape: 40
+  min_shape: 240
+  max_shape: 6
+  max_shape: 40
+  max_shape: 240
+  opt_shape: 4
+  opt_shape: 40
+  opt_shape: 240
+}
+shape_range_info {
+  name: "dropout_29.tmp_0"
+  min_shape: 4
+  min_shape: 40
+  min_shape: 120
+  max_shape: 6
+  max_shape: 40
+  max_shape: 120
+  opt_shape: 4
+  opt_shape: 40
+  opt_shape: 120
+}
+shape_range_info {
+  name: "elementwise_mul_2"
+  min_shape: 4
+  min_shape: 256
+  min_shape: 3
+  min_shape: 160
+  max_shape: 6
+  max_shape: 256
+  max_shape: 3
+  max_shape: 160
+  opt_shape: 4
+  opt_shape: 256
+  opt_shape: 3
+  opt_shape: 160
+}
+shape_range_info {
+  name: "elementwise_mul_3"
+  min_shape: 4
+  min_shape: 512
+  min_shape: 3
+  min_shape: 80
+  max_shape: 6
+  max_shape: 512
+  max_shape: 3
+  max_shape: 80
+  opt_shape: 4
+  opt_shape: 512
+  opt_shape: 3
+  opt_shape: 80
+}
+shape_range_info {
+  name: "flatten_1.tmp_0"
+  min_shape: 4
+  min_shape: 120
+  min_shape: 40
+  max_shape: 6
+  max_shape: 120
+  max_shape: 40
+  opt_shape: 4
+  opt_shape: 120
+  opt_shape: 40
+}
+shape_range_info {
+  name: "hardsigmoid_2.tmp_0"
+  min_shape: 4
+  min_shape: 256
+  min_shape: 1
+  min_shape: 1
+  max_shape: 6
+  max_shape: 256
+  max_shape: 1
+  max_shape: 1
+  opt_shape: 4
+  opt_shape: 256
+  opt_shape: 1
+  opt_shape: 1
+}
+shape_range_info {
+  name: "hardsigmoid_3.tmp_0"
+  min_shape: 4
+  min_shape: 512
+  min_shape: 1
+  min_shape: 1
+  max_shape: 6
+  max_shape: 512
+  max_shape: 1
+  max_shape: 1
+  opt_shape: 4
+  opt_shape: 512
+  opt_shape: 1
+  opt_shape: 1
+}
+shape_range_info {
+  name: "layer_norm_15.tmp_2"
+  min_shape: 4
+  min_shape: 40
+  min_shape: 120
+  max_shape: 6
+  max_shape: 40
+  max_shape: 120
+  opt_shape: 4
+  opt_shape: 40
+  opt_shape: 120
+}
+shape_range_info {
+  name: "layer_norm_16.tmp_2"
+  min_shape: 4
+  min_shape: 40
+  min_shape: 120
+  max_shape: 6
+  max_shape: 40
+  max_shape: 120
+  opt_shape: 4
+  opt_shape: 40
+  opt_shape: 120
+}
+shape_range_info {
+  name: "layer_norm_17.tmp_2"
+  min_shape: 4
+  min_shape: 40
+  min_shape: 120
+  max_shape: 6
+  max_shape: 40
+  max_shape: 120
+  opt_shape: 4
+  opt_shape: 40
+  opt_shape: 120
+}
+shape_range_info {
+  name: "layer_norm_18.tmp_2"
+  min_shape: 4
+  min_shape: 40
+  min_shape: 120
+  max_shape: 6
+  max_shape: 40
+  max_shape: 120
+  opt_shape: 4
+  opt_shape: 40
+  opt_shape: 120
+}
+shape_range_info {
+  name: "layer_norm_19.tmp_2"
+  min_shape: 4
+  min_shape: 40
+  min_shape: 120
+  max_shape: 6
+  max_shape: 40
+  max_shape: 120
+  opt_shape: 4
+  opt_shape: 40
+  opt_shape: 120
+}
+shape_range_info {
+  name: "layer_norm_5.b_0"
+  min_shape: 120
+  max_shape: 120
+  opt_shape: 120
+}
+shape_range_info {
+  name: "layer_norm_5.w_0"
+  min_shape: 120
+  max_shape: 120
+  opt_shape: 120
+}
+shape_range_info {
+  name: "layer_norm_6.b_0"
+  min_shape: 120
+  max_shape: 120
+  opt_shape: 120
+}
+shape_range_info {
+  name: "layer_norm_6.w_0"
+  min_shape: 120
+  max_shape: 120
+  opt_shape: 120
+}
+shape_range_info {
+  name: "layer_norm_7.b_0"
+  min_shape: 120
+  max_shape: 120
+  opt_shape: 120
+}
+shape_range_info {
+  name: "layer_norm_7.w_0"
+  min_shape: 120
+  max_shape: 120
+  opt_shape: 120
+}
+shape_range_info {
+  name: "layer_norm_8.b_0"
+  min_shape: 120
+  max_shape: 120
+  opt_shape: 120
+}
+shape_range_info {
+  name: "layer_norm_8.w_0"
+  min_shape: 120
+  max_shape: 120
+  opt_shape: 120
+}
+shape_range_info {
+  name: "layer_norm_9.b_0"
+  min_shape: 120
+  max_shape: 120
+  opt_shape: 120
+}
+shape_range_info {
+  name: "layer_norm_9.w_0"
+  min_shape: 120
+  max_shape: 120
+  opt_shape: 120
+}
+shape_range_info {
+  name: "linear_13.b_0"
+  min_shape: 360
+  max_shape: 360
+  opt_shape: 360
+}
+shape_range_info {
+  name: "linear_13.w_0"
+  min_shape: 120
+  min_shape: 360
+  max_shape: 120
+  max_shape: 360
+  opt_shape: 120
+  opt_shape: 360
+}
+shape_range_info {
+  name: "linear_14.b_0"
+  min_shape: 120
+  max_shape: 120
+  opt_shape: 120
+}
+shape_range_info {
+  name: "linear_14.w_0"
+  min_shape: 120
+  min_shape: 120
+  max_shape: 120
+  max_shape: 120
+  opt_shape: 120
+  opt_shape: 120
+}
+shape_range_info {
+  name: "linear_15.b_0"
+  min_shape: 240
+  max_shape: 240
+  opt_shape: 240
+}
+shape_range_info {
+  name: "linear_15.w_0"
+  min_shape: 120
+  min_shape: 240
+  max_shape: 120
+  max_shape: 240
+  opt_shape: 120
+  opt_shape: 240
+}
+shape_range_info {
+  name: "linear_16.b_0"
+  min_shape: 120
+  max_shape: 120
+  opt_shape: 120
+}
+shape_range_info {
+  name: "linear_16.w_0"
+  min_shape: 240
+  min_shape: 120
+  max_shape: 240
+  max_shape: 120
+  opt_shape: 240
+  opt_shape: 120
+}
+shape_range_info {
+  name: "linear_17.b_0"
+  min_shape: 360
+  max_shape: 360
+  opt_shape: 360
+}
+shape_range_info {
+  name: "linear_17.w_0"
+  min_shape: 120
+  min_shape: 360
+  max_shape: 120
+  max_shape: 360
+  opt_shape: 120
+  opt_shape: 360
+}
+shape_range_info {
+  name: "linear_18.b_0"
+  min_shape: 120
+  max_shape: 120
+  opt_shape: 120
+}
+shape_range_info {
+  name: "linear_18.w_0"
+  min_shape: 120
+  min_shape: 120
+  max_shape: 120
+  max_shape: 120
+  opt_shape: 120
+  opt_shape: 120
+}
+shape_range_info {
+  name: "linear_19.b_0"
+  min_shape: 240
+  max_shape: 240
+  opt_shape: 240
+}
+shape_range_info {
+  name: "linear_19.w_0"
+  min_shape: 120
+  min_shape: 240
+  max_shape: 120
+  max_shape: 240
+  opt_shape: 120
+  opt_shape: 240
+}
+shape_range_info {
+  name: "linear_20.b_0"
+  min_shape: 120
+  max_shape: 120
+  opt_shape: 120
+}
+shape_range_info {
+  name: "linear_20.w_0"
+  min_shape: 240
+  min_shape: 120
+  max_shape: 240
+  max_shape: 120
+  opt_shape: 240
+  opt_shape: 120
+}
+shape_range_info {
+  name: "linear_21.b_0"
+  min_shape: 6625
+  max_shape: 6625
+  opt_shape: 6625
+}
+shape_range_info {
+  name: "linear_21.w_0"
+  min_shape: 64
+  min_shape: 6625
+  max_shape: 64
+  max_shape: 6625
+  opt_shape: 64
+  opt_shape: 6625
+}
+shape_range_info {
+  name: "linear_35.tmp_0"
+  min_shape: 4
+  min_shape: 40
+  min_shape: 360
+  max_shape: 6
+  max_shape: 40
+  max_shape: 360
+  opt_shape: 4
+  opt_shape: 40
+  opt_shape: 360
+}
+shape_range_info {
+  name: "linear_35.tmp_1"
+  min_shape: 4
+  min_shape: 40
+  min_shape: 360
+  max_shape: 6
+  max_shape: 40
+  max_shape: 360
+  opt_shape: 4
+  opt_shape: 40
+  opt_shape: 360
+}
+shape_range_info {
+  name: "linear_36.tmp_0"
+  min_shape: 4
+  min_shape: 40
+  min_shape: 120
+  max_shape: 6
+  max_shape: 40
+  max_shape: 120
+  opt_shape: 4
+  opt_shape: 40
+  opt_shape: 120
+}
+shape_range_info {
+  name: "linear_36.tmp_1"
+  min_shape: 4
+  min_shape: 40
+  min_shape: 120
+  max_shape: 6
+  max_shape: 40
+  max_shape: 120
+  opt_shape: 4
+  opt_shape: 40
+  opt_shape: 120
+}
+shape_range_info {
+  name: "linear_37.tmp_0"
+  min_shape: 4
+  min_shape: 40
+  min_shape: 240
+  max_shape: 6
+  max_shape: 40
+  max_shape: 240
+  opt_shape: 4
+  opt_shape: 40
+  opt_shape: 240
+}
+shape_range_info {
+  name: "linear_37.tmp_1"
+  min_shape: 4
+  min_shape: 40
+  min_shape: 240
+  max_shape: 6
+  max_shape: 40
+  max_shape: 240
+  opt_shape: 4
+  opt_shape: 40
+  opt_shape: 240
+}
+shape_range_info {
+  name: "linear_38.tmp_0"
+  min_shape: 4
+  min_shape: 40
+  min_shape: 120
+  max_shape: 6
+  max_shape: 40
+  max_shape: 120
+  opt_shape: 4
+  opt_shape: 40
+  opt_shape: 120
+}
+shape_range_info {
+  name: "linear_38.tmp_1"
+  min_shape: 4
+  min_shape: 40
+  min_shape: 120
+  max_shape: 6
+  max_shape: 40
+  max_shape: 120
+  opt_shape: 4
+  opt_shape: 40
+  opt_shape: 120
+}
+shape_range_info {
+  name: "linear_39.tmp_0"
+  min_shape: 4
+  min_shape: 40
+  min_shape: 360
+  max_shape: 6
+  max_shape: 40
+  max_shape: 360
+  opt_shape: 4
+  opt_shape: 40
+  opt_shape: 360
+}
+shape_range_info {
+  name: "linear_39.tmp_1"
+  min_shape: 4
+  min_shape: 40
+  min_shape: 360
+  max_shape: 6
+  max_shape: 40
+  max_shape: 360
+  opt_shape: 4
+  opt_shape: 40
+  opt_shape: 360
+}
+shape_range_info {
+  name: "linear_40.tmp_0"
+  min_shape: 4
+  min_shape: 40
+  min_shape: 120
+  max_shape: 6
+  max_shape: 40
+  max_shape: 120
+  opt_shape: 4
+  opt_shape: 40
+  opt_shape: 120
+}
+shape_range_info {
+  name: "linear_40.tmp_1"
+  min_shape: 4
+  min_shape: 40
+  min_shape: 120
+  max_shape: 6
+  max_shape: 40
+  max_shape: 120
+  opt_shape: 4
+  opt_shape: 40
+  opt_shape: 120
+}
+shape_range_info {
+  name: "linear_41.tmp_0"
+  min_shape: 4
+  min_shape: 40
+  min_shape: 240
+  max_shape: 6
+  max_shape: 40
+  max_shape: 240
+  opt_shape: 4
+  opt_shape: 40
+  opt_shape: 240
+}
+shape_range_info {
+  name: "linear_41.tmp_1"
+  min_shape: 4
+  min_shape: 40
+  min_shape: 240
+  max_shape: 6
+  max_shape: 40
+  max_shape: 240
+  opt_shape: 4
+  opt_shape: 40
+  opt_shape: 240
+}
+shape_range_info {
+  name: "linear_42.tmp_0"
+  min_shape: 4
+  min_shape: 40
+  min_shape: 120
+  max_shape: 6
+  max_shape: 40
+  max_shape: 120
+  opt_shape: 4
+  opt_shape: 40
+  opt_shape: 120
+}
+shape_range_info {
+  name: "linear_42.tmp_1"
+  min_shape: 4
+  min_shape: 40
+  min_shape: 120
+  max_shape: 6
+  max_shape: 40
+  max_shape: 120
+  opt_shape: 4
+  opt_shape: 40
+  opt_shape: 120
+}
+shape_range_info {
+  name: "linear_43.tmp_0"
+  min_shape: 4
+  min_shape: 40
+  min_shape: 6625
+  max_shape: 6
+  max_shape: 40
+  max_shape: 6625
+  opt_shape: 4
+  opt_shape: 40
+  opt_shape: 6625
+}
+shape_range_info {
+  name: "linear_43.tmp_1"
+  min_shape: 4
+  min_shape: 40
+  min_shape: 6625
+  max_shape: 6
+  max_shape: 40
+  max_shape: 6625
+  opt_shape: 4
+  opt_shape: 40
+  opt_shape: 6625
+}
+shape_range_info {
+  name: "matmul_v2_4.tmp_0"
+  min_shape: 4
+  min_shape: 8
+  min_shape: 40
+  min_shape: 40
+  max_shape: 6
+  max_shape: 8
+  max_shape: 40
+  max_shape: 40
+  opt_shape: 4
+  opt_shape: 8
+  opt_shape: 40
+  opt_shape: 40
+}
+shape_range_info {
+  name: "matmul_v2_5.tmp_0"
+  min_shape: 4
+  min_shape: 8
+  min_shape: 40
+  min_shape: 15
+  max_shape: 6
+  max_shape: 8
+  max_shape: 40
+  max_shape: 15
+  opt_shape: 4
+  opt_shape: 8
+  opt_shape: 40
+  opt_shape: 15
+}
+shape_range_info {
+  name: "matmul_v2_6.tmp_0"
+  min_shape: 4
+  min_shape: 8
+  min_shape: 40
+  min_shape: 40
+  max_shape: 6
+  max_shape: 8
+  max_shape: 40
+  max_shape: 40
+  opt_shape: 4
+  opt_shape: 8
+  opt_shape: 40
+  opt_shape: 40
+}
+shape_range_info {
+  name: "matmul_v2_7.tmp_0"
+  min_shape: 4
+  min_shape: 8
+  min_shape: 40
+  min_shape: 15
+  max_shape: 6
+  max_shape: 8
+  max_shape: 40
+  max_shape: 15
+  opt_shape: 4
+  opt_shape: 8
+  opt_shape: 40
+  opt_shape: 15
+}
+shape_range_info {
+  name: "pool2d_3.tmp_0"
+  min_shape: 4
+  min_shape: 256
+  min_shape: 1
+  min_shape: 1
+  max_shape: 6
+  max_shape: 256
+  max_shape: 1
+  max_shape: 1
+  opt_shape: 4
+  opt_shape: 256
+  opt_shape: 1
+  opt_shape: 1
+}
+shape_range_info {
+  name: "pool2d_4.tmp_0"
+  min_shape: 4
+  min_shape: 512
+  min_shape: 1
+  min_shape: 1
+  max_shape: 6
+  max_shape: 512
+  max_shape: 1
+  max_shape: 1
+  opt_shape: 4
+  opt_shape: 512
+  opt_shape: 1
+  opt_shape: 1
+}
+shape_range_info {
+  name: "pool2d_5.tmp_0"
+  min_shape: 4
+  min_shape: 512
+  min_shape: 1
+  min_shape: 40
+  max_shape: 6
+  max_shape: 512
+  max_shape: 1
+  max_shape: 40
+  opt_shape: 4
+  opt_shape: 512
+  opt_shape: 1
+  opt_shape: 40
+}
+shape_range_info {
+  name: "pool2d_5.tmp_0_clone_0"
+  min_shape: 4
+  min_shape: 512
+  min_shape: 1
+  min_shape: 40
+  max_shape: 6
+  max_shape: 512
+  max_shape: 1
+  max_shape: 40
+  opt_shape: 4
+  opt_shape: 512
+  opt_shape: 1
+  opt_shape: 40
+}
+shape_range_info {
+  name: "relu_2.tmp_0"
+  min_shape: 4
+  min_shape: 64
+  min_shape: 1
+  min_shape: 1
+  max_shape: 6
+  max_shape: 64
+  max_shape: 1
+  max_shape: 1
+  opt_shape: 4
+  opt_shape: 64
+  opt_shape: 1
+  opt_shape: 1
+}
+shape_range_info {
+  name: "relu_3.tmp_0"
+  min_shape: 4
+  min_shape: 128
+  min_shape: 1
+  min_shape: 1
+  max_shape: 6
+  max_shape: 128
+  max_shape: 1
+  max_shape: 1
+  opt_shape: 4
+  opt_shape: 128
+  opt_shape: 1
+  opt_shape: 1
+}
+shape_range_info {
+  name: "reshape2_5.tmp_0"
+  min_shape: 4
+  min_shape: 40
+  min_shape: 3
+  min_shape: 8
+  min_shape: 15
+  max_shape: 6
+  max_shape: 40
+  max_shape: 3
+  max_shape: 8
+  max_shape: 15
+  opt_shape: 4
+  opt_shape: 40
+  opt_shape: 3
+  opt_shape: 8
+  opt_shape: 15
+}
+shape_range_info {
+  name: "reshape2_6.tmp_0"
+  min_shape: 4
+  min_shape: 40
+  min_shape: 120
+  max_shape: 6
+  max_shape: 40
+  max_shape: 120
+  opt_shape: 4
+  opt_shape: 40
+  opt_shape: 120
+}
+shape_range_info {
+  name: "reshape2_7.tmp_0"
+  min_shape: 4
+  min_shape: 40
+  min_shape: 3
+  min_shape: 8
+  min_shape: 15
+  max_shape: 6
+  max_shape: 40
+  max_shape: 3
+  max_shape: 8
+  max_shape: 15
+  opt_shape: 4
+  opt_shape: 40
+  opt_shape: 3
+  opt_shape: 8
+  opt_shape: 15
+}
+shape_range_info {
+  name: "reshape2_8.tmp_0"
+  min_shape: 4
+  min_shape: 40
+  min_shape: 120
+  max_shape: 6
+  max_shape: 40
+  max_shape: 120
+  opt_shape: 4
+  opt_shape: 40
+  opt_shape: 120
+}
+shape_range_info {
+  name: "reshape2_9.tmp_0"
+  min_shape: 4
+  min_shape: 1
+  min_shape: 40
+  min_shape: 120
+  max_shape: 6
+  max_shape: 1
+  max_shape: 40
+  max_shape: 120
+  opt_shape: 4
+  opt_shape: 1
+  opt_shape: 40
+  opt_shape: 120
+}
+shape_range_info {
+  name: "softmax_3.tmp_0"
+  min_shape: 4
+  min_shape: 8
+  min_shape: 40
+  min_shape: 40
+  max_shape: 6
+  max_shape: 8
+  max_shape: 40
+  max_shape: 40
+  opt_shape: 4
+  opt_shape: 8
+  opt_shape: 40
+  opt_shape: 40
+}
+shape_range_info {
+  name: "softmax_4.tmp_0"
+  min_shape: 4
+  min_shape: 8
+  min_shape: 40
+  min_shape: 40
+  max_shape: 6
+  max_shape: 8
+  max_shape: 40
+  max_shape: 40
+  opt_shape: 4
+  opt_shape: 8
+  opt_shape: 40
+  opt_shape: 40
+}
+shape_range_info {
+  name: "squeeze_1.tmp_0"
+  min_shape: 4
+  min_shape: 64
+  min_shape: 40
+  max_shape: 6
+  max_shape: 64
+  max_shape: 40
+  opt_shape: 4
+  opt_shape: 64
+  opt_shape: 40
+}
+shape_range_info {
+  name: "swish_21.tmp_0"
+  min_shape: 4
+  min_shape: 64
+  min_shape: 1
+  min_shape: 40
+  max_shape: 6
+  max_shape: 64
+  max_shape: 1
+  max_shape: 40
+  opt_shape: 4
+  opt_shape: 64
+  opt_shape: 1
+  opt_shape: 40
+}
+shape_range_info {
+  name: "swish_22.tmp_0"
+  min_shape: 4
+  min_shape: 120
+  min_shape: 1
+  min_shape: 40
+  max_shape: 6
+  max_shape: 120
+  max_shape: 1
+  max_shape: 40
+  opt_shape: 4
+  opt_shape: 120
+  opt_shape: 1
+  opt_shape: 40
+}
+shape_range_info {
+  name: "swish_23.tmp_0"
+  min_shape: 4
+  min_shape: 40
+  min_shape: 240
+  max_shape: 6
+  max_shape: 40
+  max_shape: 240
+  opt_shape: 4
+  opt_shape: 40
+  opt_shape: 240
+}
+shape_range_info {
+  name: "swish_24.tmp_0"
+  min_shape: 4
+  min_shape: 40
+  min_shape: 240
+  max_shape: 6
+  max_shape: 40
+  max_shape: 240
+  opt_shape: 4
+  opt_shape: 40
+  opt_shape: 240
+}
+shape_range_info {
+  name: "swish_25.tmp_0"
+  min_shape: 4
+  min_shape: 512
+  min_shape: 1
+  min_shape: 40
+  max_shape: 6
+  max_shape: 512
+  max_shape: 1
+  max_shape: 40
+  opt_shape: 4
+  opt_shape: 512
+  opt_shape: 1
+  opt_shape: 40
+}
+shape_range_info {
+  name: "swish_26.tmp_0"
+  min_shape: 4
+  min_shape: 64
+  min_shape: 1
+  min_shape: 40
+  max_shape: 6
+  max_shape: 64
+  max_shape: 1
+  max_shape: 40
+  opt_shape: 4
+  opt_shape: 64
+  opt_shape: 1
+  opt_shape: 40
+}
+shape_range_info {
+  name: "swish_27.tmp_0"
+  min_shape: 4
+  min_shape: 64
+  min_shape: 1
+  min_shape: 40
+  max_shape: 6
+  max_shape: 64
+  max_shape: 1
+  max_shape: 40
+  opt_shape: 4
+  opt_shape: 64
+  opt_shape: 1
+  opt_shape: 40
+}
+shape_range_info {
+  name: "tmp_10"
+  min_shape: 4
+  min_shape: 40
+  min_shape: 120
+  max_shape: 6
+  max_shape: 40
+  max_shape: 120
+  opt_shape: 4
+  opt_shape: 40
+  opt_shape: 120
+}
+shape_range_info {
+  name: "tmp_11"
+  min_shape: 4
+  min_shape: 40
+  min_shape: 120
+  max_shape: 6
+  max_shape: 40
+  max_shape: 120
+  opt_shape: 4
+  opt_shape: 40
+  opt_shape: 120
+}
+shape_range_info {
+  name: "tmp_6"
+  min_shape: 4
+  min_shape: 8
+  min_shape: 40
+  min_shape: 15
+  max_shape: 6
+  max_shape: 8
+  max_shape: 40
+  max_shape: 15
+  opt_shape: 4
+  opt_shape: 8
+  opt_shape: 40
+  opt_shape: 15
+}
+shape_range_info {
+  name: "tmp_7"
+  min_shape: 4
+  min_shape: 40
+  min_shape: 120
+  max_shape: 6
+  max_shape: 40
+  max_shape: 120
+  opt_shape: 4
+  opt_shape: 40
+  opt_shape: 120
+}
+shape_range_info {
+  name: "tmp_8"
+  min_shape: 4
+  min_shape: 40
+  min_shape: 120
+  max_shape: 6
+  max_shape: 40
+  max_shape: 120
+  opt_shape: 4
+  opt_shape: 40
+  opt_shape: 120
+}
+shape_range_info {
+  name: "tmp_9"
+  min_shape: 4
+  min_shape: 8
+  min_shape: 40
+  min_shape: 15
+  max_shape: 6
+  max_shape: 8
+  max_shape: 40
+  max_shape: 15
+  opt_shape: 4
+  opt_shape: 8
+  opt_shape: 40
+  opt_shape: 15
+}
+shape_range_info {
+  name: "transpose_10.tmp_0"
+  min_shape: 3
+  min_shape: 4
+  min_shape: 8
+  min_shape: 40
+  min_shape: 15
+  max_shape: 3
+  max_shape: 6
+  max_shape: 8
+  max_shape: 40
+  max_shape: 15
+  opt_shape: 3
+  opt_shape: 4
+  opt_shape: 8
+  opt_shape: 40
+  opt_shape: 15
+}
+shape_range_info {
+  name: "transpose_10.tmp_0_slice_0"
+  min_shape: 4
+  min_shape: 8
+  min_shape: 40
+  min_shape: 15
+  max_shape: 6
+  max_shape: 8
+  max_shape: 40
+  max_shape: 15
+  opt_shape: 4
+  opt_shape: 8
+  opt_shape: 40
+  opt_shape: 15
+}
+shape_range_info {
+  name: "transpose_10.tmp_0_slice_1"
+  min_shape: 4
+  min_shape: 8
+  min_shape: 40
+  min_shape: 15
+  max_shape: 6
+  max_shape: 8
+  max_shape: 40
+  max_shape: 15
+  opt_shape: 4
+  opt_shape: 8
+  opt_shape: 40
+  opt_shape: 15
+}
+shape_range_info {
+  name: "transpose_10.tmp_0_slice_2"
+  min_shape: 4
+  min_shape: 8
+  min_shape: 40
+  min_shape: 15
+  max_shape: 6
+  max_shape: 8
+  max_shape: 40
+  max_shape: 15
+  opt_shape: 4
+  opt_shape: 8
+  opt_shape: 40
+  opt_shape: 15
+}
+shape_range_info {
+  name: "transpose_11.tmp_0"
+  min_shape: 4
+  min_shape: 8
+  min_shape: 15
+  min_shape: 40
+  max_shape: 6
+  max_shape: 8
+  max_shape: 15
+  max_shape: 40
+  opt_shape: 4
+  opt_shape: 8
+  opt_shape: 15
+  opt_shape: 40
+}
+shape_range_info {
+  name: "transpose_12.tmp_0"
+  min_shape: 4
+  min_shape: 40
+  min_shape: 8
+  min_shape: 15
+  max_shape: 6
+  max_shape: 40
+  max_shape: 8
+  max_shape: 15
+  opt_shape: 4
+  opt_shape: 40
+  opt_shape: 8
+  opt_shape: 15
+}
+shape_range_info {
+  name: "transpose_13.tmp_0"
+  min_shape: 3
+  min_shape: 4
+  min_shape: 8
+  min_shape: 40
+  min_shape: 15
+  max_shape: 3
+  max_shape: 6
+  max_shape: 8
+  max_shape: 40
+  max_shape: 15
+  opt_shape: 3
+  opt_shape: 4
+  opt_shape: 8
+  opt_shape: 40
+  opt_shape: 15
+}
+shape_range_info {
+  name: "transpose_13.tmp_0_slice_0"
+  min_shape: 4
+  min_shape: 8
+  min_shape: 40
+  min_shape: 15
+  max_shape: 6
+  max_shape: 8
+  max_shape: 40
+  max_shape: 15
+  opt_shape: 4
+  opt_shape: 8
+  opt_shape: 40
+  opt_shape: 15
+}
+shape_range_info {
+  name: "transpose_13.tmp_0_slice_1"
+  min_shape: 4
+  min_shape: 8
+  min_shape: 40
+  min_shape: 15
+  max_shape: 6
+  max_shape: 8
+  max_shape: 40
+  max_shape: 15
+  opt_shape: 4
+  opt_shape: 8
+  opt_shape: 40
+  opt_shape: 15
+}
+shape_range_info {
+  name: "transpose_13.tmp_0_slice_2"
+  min_shape: 4
+  min_shape: 8
+  min_shape: 40
+  min_shape: 15
+  max_shape: 6
+  max_shape: 8
+  max_shape: 40
+  max_shape: 15
+  opt_shape: 4
+  opt_shape: 8
+  opt_shape: 40
+  opt_shape: 15
+}
+shape_range_info {
+  name: "transpose_14.tmp_0"
+  min_shape: 4
+  min_shape: 8
+  min_shape: 15
+  min_shape: 40
+  max_shape: 6
+  max_shape: 8
+  max_shape: 15
+  max_shape: 40
+  opt_shape: 4
+  opt_shape: 8
+  opt_shape: 15
+  opt_shape: 40
+}
+shape_range_info {
+  name: "transpose_15.tmp_0"
+  min_shape: 4
+  min_shape: 40
+  min_shape: 8
+  min_shape: 15
+  max_shape: 6
+  max_shape: 40
+  max_shape: 8
+  max_shape: 15
+  opt_shape: 4
+  opt_shape: 40
+  opt_shape: 8
+  opt_shape: 15
+}
+shape_range_info {
+  name: "transpose_16.tmp_0"
+  min_shape: 4
+  min_shape: 120
+  min_shape: 1
+  min_shape: 40
+  max_shape: 6
+  max_shape: 120
+  max_shape: 1
+  max_shape: 40
+  opt_shape: 4
+  opt_shape: 120
+  opt_shape: 1
+  opt_shape: 40
+}
+shape_range_info {
+  name: "transpose_17.tmp_0"
+  min_shape: 4
+  min_shape: 40
+  min_shape: 64
+  max_shape: 6
+  max_shape: 40
+  max_shape: 64
+  opt_shape: 4
+  opt_shape: 40
+  opt_shape: 64
+}
+shape_range_info {
+  name: "transpose_9.tmp_0"
+  min_shape: 4
+  min_shape: 40
+  min_shape: 120
+  max_shape: 6
+  max_shape: 40
+  max_shape: 120
+  opt_shape: 4
+  opt_shape: 40
+  opt_shape: 120
+}
+shape_range_info {
+  name: "x"
+  min_shape: 4
+  min_shape: 3
+  min_shape: 48
+  min_shape: 320
+  max_shape: 6
+  max_shape: 3
+  max_shape: 48
+  max_shape: 320
+  opt_shape: 4
+  opt_shape: 3
+  opt_shape: 48
+  opt_shape: 320
+}
