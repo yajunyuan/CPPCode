@@ -3,6 +3,7 @@
 #include <opencv2/opencv.hpp>
 #include "NvInfer.h"
 #include <numeric>
+#include "log.h"
 #pragma warning(disable:4996)
 using namespace nvinfer1;
 #define CHECK(status) \
